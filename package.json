@@ -1,0 +1,12 @@
+{
+  "name": "zoom_marker",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^2.2.0"
+  },
+  "scripts": {
+	"build": "babel WebRoot/test/react/ -d lib -s"
+  }
+}

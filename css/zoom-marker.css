@@ -1,0 +1,3 @@
+.picview { width:90%; margin:auto auto auto auto; height:800px; overflow:hidden; }
+.picview img{position:absolute; left: 0; top:0; width:500px; z-index:1; }
+.zoom-marker{cursor: pointer;z-index:2;}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片放大拖动</title>
+
+    <link rel="stylesheet" href="css/zoom-marker.css">
+
+</head>
+<body>
+
+<div id="picview" class="picview">
+    <img src="img/mountain.jpg" alt="..." name="viewArea" id="viewArea" draggable="false"/>
+</div>
+
+</body>
+
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery.mousewheel.min.js"></script>
+
+<script src="js/zoom-marker.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#viewArea').zoomMarker({
+            src: "img/mountain.jpg",
+            rate: 0.2,
+            markers:[
+                {src:"img/marker.png", x:500, y:500},
+                {src:"img/marker.png", x:0, y:0},
+                {src:"img/marker.png", x:1280, y:720, size:20},
+                ]
+        });
+        setTimeout(function(){
+            $('#viewArea').zoomMarker_LoadImage("img/rail.jpg");
+            $('#viewArea').zoomMarker_CleanMarker();
+            $('#viewArea').zoomMarker_AddMarker({src:"img/marker.png", x:320, y:180, size:20, click:function(e){
+                alert(e);
+            }});
+            for(var i=0;i<100;++i){
+                $('#viewArea').zoomMarker_AddMarker({src:"img/marker.png", x:i, y:180, size:20, click:function(e){
+                    alert(e);
+                }});
+            }
+        }, 1000);
+    })
+</script>
+
+</html>
