@@ -179,7 +179,6 @@
         _marker.attr('src', marker.src);
         _marker.height(size);
         _marker.width(size);
-        setMarkerOffset(_marker, marker, that.offset());
         // 按键监听器
         if(typeof(marker.click)!="undefined"){
             _marker.click(function(){
@@ -188,6 +187,7 @@
         }
         that.parent().append(_marker);
         markerList.push({marker:_marker, param:marker});
+        setMarkerOffset(_marker, marker, that.offset());
         return _marker;
     }
 

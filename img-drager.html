@@ -9,8 +9,8 @@
 </head>
 <body>
 
-<div id="picview" class="picview">
-    <img src="img/mountain.jpg" alt="..." name="viewArea" id="viewArea" draggable="false"/>
+<div id="zoom-marker-div" class="zoom-marker-div">
+    <img class="zoom-marker-img" id="zoom-marker-img" src="img/mountain.jpg" alt="..." name="viewArea"  draggable="false"/>
 </div>
 
 </body>
@@ -22,7 +22,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#viewArea').zoomMarker({
+        $('#zoom-marker-img').zoomMarker({
             src: "img/mountain.jpg",
             rate: 0.2,
             markers:[
