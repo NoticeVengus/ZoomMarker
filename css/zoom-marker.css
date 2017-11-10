@@ -14,11 +14,32 @@ body{
     position:absolute;
     left: 0;
     top:0;
-    width:500px;
     z-index:1;
 }
 
 .zoom-marker{
-    cursor: pointer;
     z-index:2;
+    position: absolute;
+    cursor: pointer;
+}
+
+.zoom-marker img{
+    position: absolute;
+}
+
+.zoom-marker span{
+    position: absolute;
+}
+
+.zoom-marker-hover-dialog{
+    z-index: 10;
+    background-color: lightgray;
+    display: none;
+    position: absolute;
+    padding: 10px;
+    color: white;
+    border-color: white;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
 }
