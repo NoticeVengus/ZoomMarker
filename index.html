@@ -2,50 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>图片放大拖动</title>
+    <title>ZoomMarker_Demo</title>
 
     <link rel="stylesheet" href="css/zoom-marker.css">
+    <link rel="stylesheet" href="css/easy-loading.css">
+
+    <style>
+        .zoom-marker-navigator{
+            width: 100%;
+            margin: 10px;
+            text-align: center;
+        }
+    </style>
 
 </head>
 <body>
 
+<div class="zoom-marker-navigator">
+    <button id="zoom-marker-btn-switch">switch picture</button>
+    <button id="zoom-marker-btn-clean">clean marker</button>
+    <button id="zoom-marker-btn-loading">show loader</button>
+</div>
+
 <div id="zoom-marker-div" class="zoom-marker-div">
-    <img class="zoom-marker-img" id="zoom-marker-img" src="img/mountain.jpg" alt="..." name="viewArea"  draggable="false"/>
+    <img class="zoom-marker-img" id="zoom-marker-img" alt="..." name="viewArea"  draggable="false"/>
 </div>
 
 </body>
 
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/hammer.min.js"></script>
 
 <script src="js/zoom-marker.js"></script>
+<script src="js/easy-loading.js"></script>
 
 <script>
+
+    /******************* init navigator button, no need for users' initialization *********************/
+    var picTag = 0;
+    var tagNumber = 1;
+    $('#zoom-marker-btn-switch').click(function(e){
+        $('#zoom-marker-img').zoomMarker_CleanMarker();
+        if(picTag===0){
+            $('#zoom-marker-img').zoomMarker_LoadImage("img/rail.jpg");
+        }
+        else if(picTag===1){
+            $('#zoom-marker-img').zoomMarker_LoadImage("img/mountain.jpg");
+        }
+        picTag = 1-picTag;
+    });
+
+    $('#zoom-marker-btn-clean').click(function(e){
+        $('#zoom-marker-img').zoomMarker_CleanMarker();
+    });
+
+    // this array stores the styles for EASY-LOADING
+    var styleList = [
+        "BALL_PULSE",
+        "BALL_CLIP_ROTATE", "BALL_CLIP_ROTATE_PULSE", "SQURE_SPIN", "BALL_CLIP_ROTATE_MULTIPLE",
+        "BALL_PULSE_RISE", "BALL_ROTATE", "CUBE_TRANSITION", "BALL_ZIP_ZAG", "BALL_ZIP_ZAG_DEFLECT",
+        "BALL_TRIANGLE_PATH", "BALL_SCALE", "LINE_SCALE", "LINE_SCALE_PARTY", "BALL_SCALE_MULTIPLE",
+        "BALL_PULSE_SYNC", "BALL_BEAT", "LINE_SCALE_PULSE_OUT", "LINE_SCALE_PULSE_OUT_RAPID",
+        "BALL_SCALE_RIPPLE", "BALL_SCALE_RIPPLE_MULTIPLE", "BALL_SPIN_FADE_LOADER", "LINK_SPIN_FADE_LOADER",
+        "TRIANGLE_SKEW_SPIN", "PACMAN", "SEMI_CIRCLE_SPIN"
+    ];
+    var stylePosition = 0;
+    $('#zoom-marker-btn-loading').click(function(e){
+        EasyLoading.show({
+            text: $("<span>"+styleList[stylePosition]+"</span>"),
+            button:$("<span>dismiss</span>"),
+            type: EasyLoading.TYPE[styleList[stylePosition]],
+            //timeout: EasyLoading.TIMEOUT.FAST,
+            callback: function(event, data){
+                switch(event){
+                    case 'on_btn_click' : console.log(data); break;
+                    case 'on_loaded' : console.log("callback with options:"+JSON.stringify(data)); break;
+                }
+            }
+        });
+        if(++stylePosition>=styleList.length)
+            stylePosition = 0;
+    });
+
+    // handle "TAP" event and add marker to image
+    $("#zoom-marker-img").on("zoom_marker_mouse_click", function(event, position){
+        console.log("Mouse click on: "+JSON.stringify(position));
+        $('#zoom-marker-img').zoomMarker_AddMarker({
+            src:"img/marker.svg",
+            x:position.x,
+            y:position.y,
+            size:30,
+            dialog:{
+                value: "<h4>content for dialog_"+tagNumber+"</h4>",
+                offsetX: 20,
+                style: {
+                    "border-color": "#86df5f"
+                }
+            },
+            hint:{value:tagNumber, style:{color:"#ffffff", left:"10px"}}
+        });
+        if(++tagNumber>=10)
+            tagNumber=1;
+    });
+
+    // listen to marker click event, print to console and delete the marker
+    $('#zoom-marker-img').on("zoom_marker_click", function(event, marker){
+        console.log(JSON.stringify(marker));
+        $('#zoom-marker-img').zoomMarker_RemoveMarker(marker.id);
+    });
+
+    // message for the beginning of image loading process
+    $('#zoom-marker-img').on("zoom_marker_img_load", function(event, src){
+        console.log("loading started for image : "+src);
+        EasyLoading.show({
+            text: $("<span>loading image</span>"),
+            button:$("<span>dismiss</span>"),
+            type: EasyLoading.TYPE.PACMAN
+        });
+    });
+
+    // message for image loaded
+    $('#zoom-marker-img').on("zoom_marker_img_loaded", function(event, size){
+        console.log("image has been loaded with size: "+JSON.stringify(size));
+        // we have to set a timer in order to watching the loader in local environment, cause the loading speed is too fast
+        setTimeout(function(){
+            EasyLoading.hide();
+        }, 3000);
+    });
+
+    /******************** INIT ZoomMarker here *****************************/
     $(document).ready(function () {
         $('#zoom-marker-img').zoomMarker({
             src: "img/mountain.jpg",
             rate: 0.2,
+            width: 600,
+            max: 3000,
             markers:[
-                {src:"img/marker.png", x:500, y:500},
-                {src:"img/marker.png", x:0, y:0},
-                {src:"img/marker.png", x:1280, y:720, size:20},
+                {src:"img/marker.svg", x:500, y:500}
                 ]
         });
-        /*
-        setTimeout(function(){
-            $('#viewArea').zoomMarker_LoadImage("img/rail.jpg");
-            $('#viewArea').zoomMarker_CleanMarker();
-            $('#viewArea').zoomMarker_AddMarker({src:"img/marker.png", x:320, y:180, size:20, click:function(e){
-                alert(e);
-            }});
-            for(var i=0;i<100;++i){
-                $('#viewArea').zoomMarker_AddMarker({src:"img/marker.png", x:i, y:180, size:20, click:function(e){
-                    alert(e);
-                }});
-            }
-        }, 1000);
-        */
     })
+    /******************** INIT ZoomMarker here *****************************/
+
 </script>
 
 </html>
