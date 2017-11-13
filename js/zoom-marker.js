@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2017.11.11
- * @version     0.0.4
+ * @date        2017.11.13
+ * @version     0.0.5
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -13,11 +13,15 @@
 (function($) {
 
     var options, that, dialog;
+    var isInit = false;
     var markerList = [];     // 数组，存放marker的DOM对象
     var markerId = 0;           // marker的唯一ID，只能增加
 
     $.fn.extend({
         "zoomMarker": function (_options) {
+            if(isInit)
+                return;
+            isInit = true;
             document.ondragstart=function() {return false;}
             that = $(this);
             var offset;
@@ -143,6 +147,10 @@
         // 获取图像真实尺寸
         "zoomMarker_GetPicSize": function(){
             return options.imgNaturalSize;
+        },
+        // 图像居中显示
+        "zoomMarker_ImageCenterAlign" : function(){
+            imageCenterAlign();
         }
     });
 
@@ -205,17 +213,24 @@
             }
             that.trigger("zoom_marker_img_loaded", size);
             if(typeof(noResize)==='undefined' || !noResize) {
-                // 图像居中
-                var offset = that.offset();
-                var pDiv = that.parent();
-                var top = offset.top + (pDiv.height() - that.height()) / 2;
-                var left = offset.left + (pDiv.width() - that.width()) / 2;
-                that.offset({top: top > 0 ? top : 0, left: left > 0 ? left : 0});
+                imageCenterAlign();
             }
             options.imgNaturalSize = size;
             loadMarkers(options.markers);
         });
-    };
+    }
+
+    /**
+     * 图像居中
+     */
+    var imageCenterAlign = function(){
+        // 图像居中
+        var offset = that.offset();
+        var pDiv = that.parent();
+        var top = offset.top + (pDiv.height() - that.height()) / 2;
+        var left = offset.left + (pDiv.width() - that.width()) / 2;
+        that.offset({top: top > 0 ? top : 0, left: left > 0 ? left : 0});
+    }
 
     /**
      * 加载marker
