@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2017.11.13
- * @version     0.0.5
+ * @date        2018.7.24
+ * @version     0.0.6
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -30,7 +30,7 @@
                 options = defaults;
             else
                 options = $.extend({}, defaults, _options);
-            that.context.options = options;
+            document.options = options;
             // 配置图片资源
             if(options.src===null) {
                 console.log('Image resources is not defined.');
@@ -103,7 +103,7 @@
          */
         "zoomMarker_Zoom": function(center, scale){
             var that = $(this);
-            var options = that.context.options;
+            var options = document.options;
             var offset = that.offset();
             var h0 = that.height();
             var w0 = that.width();
