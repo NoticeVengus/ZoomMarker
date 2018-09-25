@@ -22,6 +22,7 @@
     <button id="zoom-marker-btn-switch">switch picture</button>
     <button id="zoom-marker-btn-clean">clean marker</button>
     <button id="zoom-marker-btn-loading">show loader</button>
+    <button id="zoom-marker-btn-enable-drag">disable drag</button>
 </div>
 
 <div id="zoom-marker-div" class="zoom-marker-div">
@@ -67,6 +68,7 @@
         "BALL_SCALE_RIPPLE", "BALL_SCALE_RIPPLE_MULTIPLE", "BALL_SPIN_FADE_LOADER", "LINK_SPIN_FADE_LOADER",
         "TRIANGLE_SKEW_SPIN", "PACMAN", "SEMI_CIRCLE_SPIN"
     ];
+
     var stylePosition = 0;
     $('#zoom-marker-btn-loading').click(function(e){
         EasyLoading.show({
@@ -83,6 +85,17 @@
         });
         if(++stylePosition>=styleList.length)
             stylePosition = 0;
+    });
+
+    var isEnableDrag = true;
+    $('#zoom-marker-btn-enable-drag').click(function(e) {
+        isEnableDrag = !isEnableDrag;
+        $('#zoom-marker-img').zoomMarker_EnableDrag(isEnableDrag);
+        if(isEnableDrag) {
+            $('#zoom-marker-btn-enable-drag').text('disable drag');
+        } else {
+            $('#zoom-marker-btn-enable-drag').text('enable drag');
+        }
     });
 
     // handle "TAP" event and add marker to image

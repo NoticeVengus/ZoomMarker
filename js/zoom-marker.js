@@ -1,12 +1,13 @@
 /*!
  * @author      YeYe
- * @date        2018.7.24
- * @version     0.0.6
+ * @date        2018.9.25
+ * @version     0.0.7
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
  * Hammer.js(hammerjs.github.io)
- * Happy DOUBLE ELEVEN festival :-)
+ *
+ * Happy National Day Holiday :-)
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
  */
 
@@ -127,9 +128,11 @@
         // 图片拖动
         // x>0向右移动，y>0向下移动
         "zoomMarker_Move": function(x, y){
-            //console.log("x:"+x+",y:"+y);
-            $(this).offset({top:y, left:x});
-            reloadMarkers();
+            // 是否允许拖动
+            if(options.enable_drag) {
+                $(this).offset({top:y, left:x});
+                reloadMarkers();
+            }
         },
         // 添加标记点
         // marker {src:"marker.png", x:100, y:100, size:20}
@@ -151,6 +154,10 @@
         // 图像居中显示
         "zoomMarker_ImageCenterAlign" : function(){
             imageCenterAlign();
+        },
+        // 设置是否允许拖动
+        "zoomMarker_EnableDrag" : function(enable) {
+            enableDrag(enable);
         }
     });
 
@@ -342,14 +349,23 @@
         });
     }
 
+    /**
+     * 是否允许图像拖动
+     * @param enable        是否允许拖动，布尔型
+     */
+    var enableDrag = function(enable) {
+        options.enable_drag = enable;
+    }
+
     var defaults = {
         rate: 0.2,              // 鼠标滚动的缩放速率
-        src: null,             // 图片资源
-        width: 500,           // 指定图片宽度
+        src: null,              // 图片资源
+        width: 500,             // 指定图片宽度
         min: 300,               // 图片最小宽度
         max: null,              // 图片最大宽度
-        markers: [],             // marker数组，[{src:"marker.png", x:100, y:100, size:20, click:fn()}]
-        marker_size: 20        // 默认marker尺寸
+        markers: [],            // marker数组，[{src:"marker.png", x:100, y:100, size:20, click:fn()}]
+        marker_size: 20,        // 默认marker尺寸
+        enable_drag: true       // 是否允许拖动，默认允许
     }
 
 })(window.jQuery);
