@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
  * @date        2018.9.25
- * @version     0.0.7
+ * @version     0.0.8
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -9,6 +9,7 @@
  *
  * Happy National Day Holiday :-)
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
+ * 支持同时显示多张图片
  */
 
 (function($) {
