@@ -11,6 +11,7 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.0.8    | 2018.9.25 | 支持同时显示多个图片控件  | 
 | 0.0.7    | 2018.9.25 | 添加允许和禁止图像拖动接口      | 
 | 0.0.6    | 2018.7.24 | 解决jQuery的context废弃undefined问题      | 
 | 0.0.5    | 2017.11.13 | 添加图像居中接口，修复重复初始化问题      | 
@@ -71,7 +72,7 @@
 在上述例子中，你还需要在img/目录下添加一个名为moutain.jpg的文件用于显示图片，在img/目录下添加名为marker.svg的文件作为marker文件资源，我们已经在该工程对应目录下添加这两个文件。  
 现在你可以看到效果了，单击鼠标拖动图片，鼠标滚轮滚动放大缩小图片，添加的标记也会跟着移动。
 
-![Image text](https://github.com/yeye0922/ZoomMarker/raw/master/screenshot/sc_1.png)  
+![Image text](https://github.com/yeye0922/ZoomMarker/raw/master/screenshot/sc_2.png)  
 ## Parameters参数  
 初始化时可传入以下可选参数。  
 

@@ -13,31 +13,38 @@
 
 (function($) {
 
-    var options, that, dialog;
-    var isInit = false;
-    var markerList = [];     // 数组，存放marker的DOM对象
-    var markerId = 0;           // marker的唯一ID，只能增加
+    var GLOBAL = [];     // 全局变量集合
 
     $.fn.extend({
         "zoomMarker": function (_options) {
+            const ID = $(this).attr('id');
+            initGlobalData(ID);
+            var params = getGlobalParam(ID);
+            var options = params.options;
+            var that = params.that;
+            var dialog = params.dialog;
+            var isInit = params.isInit;
+
             if(isInit)
                 return;
             isInit = true;
+            params.isInit = isInit;
             document.ondragstart=function() {return false;}
             that = $(this);
+            params.that = that;
             var offset;
             // 初始化配置
             if(typeof(_options)==='undefined')
                 options = defaults;
             else
                 options = $.extend({}, defaults, _options);
-            document.options = options;
+            params.options = options;
             // 配置图片资源
             if(options.src===null) {
                 console.log('Image resources is not defined.');
             }
             else {
-                loadImage(options.src);
+                loadImage(ID, options.src);
             }
             // 初始化鼠标滚动监听器
             that.bind('mousewheel', function(event, delta) {
@@ -73,9 +80,13 @@
             });
             // 添加用于显示marker悬浮内容窗的div标签
             dialog = $("<div id='zoom-marker-hover-dialog' class='zoom-marker-hover-dialog'></div>");
+            params.dialog = dialog;
             that.parent().append(dialog);
             // 添加图像点击监听器，发送消息
             new Hammer(document.getElementById(that.attr('id'))).on('tap', function (e) {
+                var params = getGlobalParam(ID);
+                var options = params.options;
+                var that = params.that;
                 if(typeof(e.pointers[0].x)==='undefined'){
                     var offset = that.offset();
                     that.trigger("zoom_marker_mouse_click", {
@@ -95,7 +106,8 @@
         },
         // 加载图片
         "zoomMarker_LoadImage": function(src){
-            loadImage(src, true);
+            const ID = $(this).attr('id');
+            loadImage(ID, src, true);
         },
         /**
          * 图片缩放
@@ -103,8 +115,13 @@
          * @param scale     缩放比例，>0为放大，<0为缩小
          */
         "zoomMarker_Zoom": function(center, scale){
-            var that = $(this);
-            var options = document.options;
+            const ID = $(this).attr('id');
+            var params = getGlobalParam(ID);
+            var options = params.options;
+            var that = params.that;
+
+            //var that = $(this);
+            //var options = document.options;
             var offset = that.offset();
             var h0 = that.height();
             var w0 = that.width();
@@ -123,43 +140,86 @@
             that.offset({
                 top: (center.y-that.height()*(center.y-offset.top)/h0),
                 left: (center.x-that.width()*(center.x-offset.left)/w0)})
-            reloadMarkers();
+            reloadMarkers(ID);
         },
         // 图片拖动
         // x>0向右移动，y>0向下移动
         "zoomMarker_Move": function(x, y){
+            const ID = $(this).attr('id');
+            var params = getGlobalParam(ID);
+            var options = params.options;
             // 是否允许拖动
             if(options.enable_drag) {
                 $(this).offset({top:y, left:x});
-                reloadMarkers();
+                reloadMarkers(ID);
             }
         },
         // 添加标记点
         // marker {src:"marker.png", x:100, y:100, size:20}
         "zoomMarker_AddMarker": function(marker){
-            return addMarker(marker);
+            return addMarker($(this).attr('id'), marker);
         },
         // 删除标记点
         "zoomMarker_RemoveMarker": function(markerId){
-            removeMarker(markerId);
+            removeMarker($(this).attr('id'), markerId);
         },
         // 清空标记点
         "zoomMarker_CleanMarker": function(){
-            cleanMarkers();
+            cleanMarkers($(this).attr('id'));
         },
         // 获取图像真实尺寸
         "zoomMarker_GetPicSize": function(){
+            const ID = $(this).attr('id');
+            var params = getGlobalParam(ID);
+            var options = params.options;
             return options.imgNaturalSize;
         },
         // 图像居中显示
         "zoomMarker_ImageCenterAlign" : function(){
-            imageCenterAlign();
+            imageCenterAlign($(this).attr('id'));
         },
         // 设置是否允许拖动
         "zoomMarker_EnableDrag" : function(enable) {
-            enableDrag(enable);
+            enableDrag($(this).attr('id'), enable);
         }
     });
+
+    /**
+     * 初始化全局变量
+     * @param id        当前item的ID，作为标识的唯一KEY
+     */
+    var initGlobalData = function(id) {
+        if(typeof (GLOBAL[id]) === 'undefined') {
+            GLOBAL.push({
+                id: id,
+                options: {
+                    imgNaturalSize: {
+                        width: 0,
+                        height: 0
+                    }
+                },
+                that: null,
+                dialog: null,
+                isInit: false,
+                markerList: [],    // 数组，存放marker的DOM对象
+                markerId: 0        // marker的唯一ID，只能增加
+            });
+        }
+    }
+
+    /**
+     * 获取全局变量属性值
+     * @param id            item对应ID
+     * @returns {*}
+     */
+    var getGlobalParam = function(id) {
+        for(var i = 0; i < GLOBAL.length; ++i) {
+            if(GLOBAL[i].id === id) {
+                return GLOBAL[i];
+            }
+        }
+        return null;
+    }
 
     /**
      * 异步获取图片大小，需要等待图片加载完后才能判断图片实际大小
@@ -202,10 +262,14 @@
 
     /**
      * 加载图片
-     * @param src
+     * @param id        调用该方法的item对应的id
+     * @param src       加载图片资源路径
      * @param noResize  是否调整图片的位置
      */
-    var loadImage = function(src, noResize){
+    var loadImage = function(id, src, noResize){
+        var params = getGlobalParam(id);
+        var options = params.options;
+        var that = params.that;
         that.trigger("zoom_marker_img_load", src);
         that.attr("src", src);
         getImageSize(document.getElementsByName(that.attr('name'))[0], function (size) {
@@ -220,17 +284,21 @@
             }
             that.trigger("zoom_marker_img_loaded", size);
             if(typeof(noResize)==='undefined' || !noResize) {
-                imageCenterAlign();
+                imageCenterAlign(id);
             }
             options.imgNaturalSize = size;
-            loadMarkers(options.markers);
+            params.options.imgNaturalSize = size;
+            loadMarkers(id, options.markers);
         });
     }
 
     /**
      * 图像居中
+     * @param id    item对应的id
      */
-    var imageCenterAlign = function(){
+    var imageCenterAlign = function(id){
+        var params = getGlobalParam(id);
+        var that = params.that;
         // 图像居中
         var offset = that.offset();
         var pDiv = that.parent();
@@ -241,19 +309,27 @@
 
     /**
      * 加载marker
-     * @param markers
+     * @param id        item对应的id
+     * @param markers   需要添加的marker数组
      */
-    var loadMarkers = function(markers){
+    var loadMarkers = function(id, markers){
         $(markers).each(function(index, marker){
-            addMarker(marker);
+            addMarker(id, marker);
         });
-    };
+    }
 
     /**
      * 添加marker
+     * @param id    item对应的id
      * @param marker
      */
-    var addMarker = function(marker){
+    var addMarker = function(id, marker) {
+        var params = getGlobalParam(id);
+        var options = params.options;
+        var dialog = params.dialog;
+        var that = params.that;
+        var markerId = params.markerId;
+        var markerList = params.markerList;
         var _marker = $("<div class='zoom-marker'><img draggable='false'><span></span></div>");
         var __marker = _marker.find("img");
         var size = marker.size||options.marker_size;
@@ -268,6 +344,7 @@
         __marker.height(size);
         __marker.width(size);
         var markerObj = {id:markerId++, marker:_marker, param:marker};
+        params.markerId = markerId;
         // 按键监听器
         _marker.click(function(){
             if(typeof(marker.click)!="undefined"){
@@ -291,39 +368,51 @@
         };
         that.parent().append(_marker);
         markerList.push(markerObj);
-        setMarkerOffset(_marker, marker, that.offset());
+        params.markerList = markerList;
+        setMarkerOffset(id, _marker, marker, that.offset());
         return markerObj;
     }
 
     /**
      * 在拖动或缩放后重新加载图标
+     * @param id    item对应的id
      */
-    var reloadMarkers = function(){
+    var reloadMarkers = function(id){
+        var params = getGlobalParam(id);
+        var that = params.that;
         var offset = that.offset();
-        $(markerList).each(function(index, element){
-            setMarkerOffset(element.marker, element.param, offset);
+        $(params.markerList).each(function(index, element){
+            setMarkerOffset(id, element.marker, element.param, offset);
         });
     };
 
     /**
      * 清空标记
+     * @param id    item对应的id
      */
-    var cleanMarkers = function(){
+    var cleanMarkers = function(id){
+        var params = getGlobalParam(id);
+        var markerList = params.markerList;
         $(markerList).each(function(index, element){
             element.marker.unbind();
             element.marker.remove();
         });
-        markerList = [];
-        options.markers = [];
-        dialog.hide();
+        params.markerList = [];
+        params.options.markers = [];
+        params.dialog.hide();
     };
 
     /**
      * 删除标记
-     * @param markerId 标记点的唯一ID
+     * @param id        item对应的id
+     * @param markerId  标记点的唯一ID
      */
-    var removeMarker = function(markerId){
-        $(markerList).each(function(index, element){
+    var removeMarker = function(id, markerId){
+        var params = getGlobalParam(id);
+        var markerId = params.markerId;
+        var options = params.options;
+        var dialog = params.dialog;
+        $(params.markerList).each(function(index, element){
             if(element.id===markerId) {
                 element.marker.unbind();
                 element.marker.remove();
@@ -338,11 +427,15 @@
 
     /**
      * 配置marker的offset
+     * @param id            item对应的id
      * @param marker        需要配置的marker对象
      * @param position      marker的位置信息，包含{x: , y: }
      * @param offset        图片的offset信息
      */
-    var setMarkerOffset = function(marker, position, offset){
+    var setMarkerOffset = function(id, marker, position, offset){
+        var params = getGlobalParam(id);
+        const that = params.that;
+        const options = params.options;
         marker.offset({
             left: that.width() * position.x / options.imgNaturalSize.width + offset.left - position.size/2,
             top: that.height() * position.y / options.imgNaturalSize.height + offset.top - position.size
@@ -351,10 +444,12 @@
 
     /**
      * 是否允许图像拖动
+     * @param id            item对应的id
      * @param enable        是否允许拖动，布尔型
      */
-    var enableDrag = function(enable) {
-        options.enable_drag = enable;
+    var enableDrag = function(id, enable) {
+        var params = getGlobalParam(id);
+        params.options.enable_drag = enable;
     }
 
     var defaults = {
