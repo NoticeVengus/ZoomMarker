@@ -11,6 +11,7 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.0.9    | 2018.11.5 | 解决缩放图片后图片大小不一致问题  | 
 | 0.0.8    | 2018.9.25 | 支持同时显示多个图片控件  | 
 | 0.0.7    | 2018.9.25 | 添加允许和禁止图像拖动接口      | 
 | 0.0.6    | 2018.7.24 | 解决jQuery的context废弃undefined问题      | 
@@ -24,7 +25,7 @@
 
 | name  | min-version | detail    | 
 | :-------:|:----:|:-------------:|
-| [jQuery](http://jquery.com/)   | 1.6  | JavaScript的DOM操作框架 | 
+| [jQuery](http://jquery.com/)   | 3.3.1  | JavaScript的DOM操作框架 | 
 | [jquery.mousewheel](http://plugins.jquery.com/mousewheel/)   | 1.6  | jQuery鼠标滚轮监听插件 | 
 | [Hammer.js](http://hammerjs.github.io/)| 2.0.4| 多点触控插件    | 
 | [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| 加载动画库    | 

@@ -124,15 +124,24 @@
             //var that = $(this);
             //var options = document.options;
             var offset = that.offset();
+            const hwRatio = options.imgNaturalSize.height / options.imgNaturalSize.width;
             var h0 = that.height();
             var w0 = that.width();
-            var tarWidth = w0*scale;
-            // 宽度限制
-            if(options.max!=null && (tarWidth>options.max||tarWidth<options.min)){
-                return;
+            var tarWidth = w0 * scale;
+            var tarHeight = tarWidth * hwRatio;
+            // 最大宽度限制
+            if(null != options.max && tarWidth > options.max) {
+                tarWidth = options.max;
+                tarHeight = tarWidth * hwRatio;
             }
-            that.height(h0*scale);
-            that.width(tarWidth);
+            // 最小宽度限制
+            else if(null != options.min && tarWidth < options.min) {
+                tarWidth = options.min;
+                tarHeight = tarWidth * hwRatio;
+            }
+            that.height(parseInt(tarHeight));
+            that.width(parseInt(tarWidth));
+            console.log(that.height() + ":" + that.width());
             if(typeof(center)==='undefined' || center===null){
                 center = {};
                 center.x = offset.left+w0/2;
