@@ -11,6 +11,7 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.0.10   | 2018.11.6 | 解决多图像下图片和标记点的迭代顺序问题  | 
 | 0.0.9    | 2018.11.5 | 解决缩放图片后图片大小不一致问题  | 
 | 0.0.8    | 2018.9.25 | 支持同时显示多个图片控件  | 
 | 0.0.7    | 2018.9.25 | 添加允许和禁止图像拖动接口      | 
@@ -52,7 +53,7 @@
     <link rel="stylesheet" href="css/easy-loading.css">
     <script src="js/easy-loading.js"></script>
 
-添加必要的html标签  
+添加必要的html标签，***注意img标签必须包含唯一的id属性***  
     
     <div id="zoom-marker-div" class="zoom-marker-div">
         <img class="zoom-marker-img" id="zoom-marker-img" alt="..." name="viewArea"  draggable="false"/>
@@ -86,6 +87,8 @@
 | max      | 图片最大宽度 | _null_|
 | markers  |标记点参数数组 | []|
 | marker_size | 默认标记点尺寸 | 20|
+| enable_drag | 允许拖拽 | true |
+| auto_index_z | 自动配置层级 | true |
 
 ### rate
 缺省值0.2  
@@ -122,6 +125,12 @@
 ### marker_size
 标记点尺寸只能为正方形，通过这个参数可以配置标记点的大小，你也可以在"zoomMarker_AddMarker"添加标记点方法中通过参数配置单个标记点的大小。
 
+### enable_drag
+是否允许当前图像拖拽
+
+### auto_index_z
+自动管理图像和标记点的层级信息，在点击和拖拽的时候自动将当前图像和标记点置顶
+
 ## Methods方法  
 ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQuery对象上使用jQuery插件的方法调用即可，如清空所有标记点：  
 
@@ -136,6 +145,8 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 | zoomMarker_RemoveMarker(markerId) | 删除标记点  | 
 | zoomMarker_CleanMarker()        | 清空标记点    | 
 | zoomMarker_GetPicSize()         | 获取记载图片尺寸    | 
+| zoomMarker_EnableDrag(enable)   | 是否允许图像拖拽    | 
+| zoomMarker_TopIndexZ()          | 图像和标记点置顶    |
         
 ### zoomMarker_LoadImage(src)
 用于加载图像，src传入图片URL或本地路径。
@@ -215,6 +226,9 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 
 ### zoomMarker_EnableDrag(enable)
 设置是否允许图像拖动。
+
+### zoomMarker_TopIndexZ()
+图像和对应的标记点有层级关系，通过这个方法将当前图像和标记点层级置顶。
 
 ## Event事件  
 通过"on"或"bind"监听ZoomMarker发送的事件。

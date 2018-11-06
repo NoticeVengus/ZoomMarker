@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2018.9.25
- * @version     0.0.8
+ * @date        2018.11.6
+ * @version     0.0.10
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -59,6 +59,10 @@
                 if(!(options.pinchlock||false)){
                     dialog.hide();
                     that.zoomMarker_Move(e.deltaX+offset.left, e.deltaY+offset.top);
+                    // 移动图层顺序
+                    if(options.auto_index_z) {
+                        moveImageTop(ID);
+                    }
                 }
             });
             picHamer.on("panstart", function (e) {
@@ -104,8 +108,10 @@
                         y: e.pointers[0].offsetY / that.height() * options.imgNaturalSize.height
                     });
                 }
-                // 移动图层
-                moveImageTop(ID);
+                // 移动图层顺序
+                if(options.auto_index_z) {
+                    moveImageTop(ID);
+                }
             });
         },
         // 加载图片
@@ -194,6 +200,10 @@
         // 设置是否允许拖动
         "zoomMarker_EnableDrag" : function(enable) {
             enableDrag($(this).attr('id'), enable);
+        },
+        // 置顶图像迭代顺序
+        "zoomMarker_TopIndexZ" : function() {
+            moveImageTop($(this).attr('id'));
         }
     });
 
@@ -479,16 +489,16 @@
     var moveImageTop = function(id) {
         const params = getGlobalParam(id);
         // 除了当前图层之外，其他图层都要恢复原来的z-index属性
-        GLOBAL.forEach(function(element, index) {
-            if(element.id !== id) {
-                params.that.css('z-index', params.index);
-                params.markerList.forEach(function(element, index) {
-                    element.marker.css('z-index', params.index + 1);
+        GLOBAL.forEach(function(param, index) {
+            if(param.id !== id) {
+                param.that.css('z-index', param.index);
+                param.markerList.forEach(function(element, index) {
+                    element.marker.css('z-index', param.index + 1);
                 });
             }
         });
         // 配置当前图层z-index
-        if(null != params) {
+        if(typeof(params) !== 'undefined') {
             const markerList = params.markerList;
             const img = params.that;
             img.css('z-index', 980);
@@ -506,7 +516,8 @@
         max: null,              // 图片最大宽度
         markers: [],            // marker数组，[{src:"marker.png", x:100, y:100, size:20, click:fn()}]
         marker_size: 20,        // 默认marker尺寸
-        enable_drag: true       // 是否允许拖动，默认允许
+        enable_drag: true,      // 是否允许拖动，默认允许
+        auto_index_z: true      // 自动配置图像迭代顺序
     }
 
 })(window.jQuery);
