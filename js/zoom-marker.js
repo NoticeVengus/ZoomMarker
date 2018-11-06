@@ -104,6 +104,8 @@
                         y: e.pointers[0].offsetY / that.height() * options.imgNaturalSize.height
                     });
                 }
+                // 移动图层
+                moveImageTop(ID);
             });
         },
         // 加载图片
@@ -349,7 +351,6 @@
         var markerList = params.markerList;
         var _marker = $("<div class='zoom-marker'><img draggable='false'><span></span></div>");
         _marker.css('z-index', params.index + 1);
-        console.log(params.index);
         var __marker = _marker.find("img");
         var size = marker.size||options.marker_size;
         marker.size = size;
@@ -469,6 +470,32 @@
     var enableDrag = function(id, enable) {
         var params = getGlobalParam(id);
         params.options.enable_drag = enable;
+    }
+
+    /**
+     * 移动图像和对应标记到顶层
+     * @param id            图像id
+     */
+    var moveImageTop = function(id) {
+        const params = getGlobalParam(id);
+        // 除了当前图层之外，其他图层都要恢复原来的z-index属性
+        GLOBAL.forEach(function(element, index) {
+            if(element.id !== id) {
+                params.that.css('z-index', params.index);
+                params.markerList.forEach(function(element, index) {
+                    element.marker.css('z-index', params.index + 1);
+                });
+            }
+        });
+        // 配置当前图层z-index
+        if(null != params) {
+            const markerList = params.markerList;
+            const img = params.that;
+            img.css('z-index', 980);
+            markerList.forEach(function(element, index) {
+                element.marker.css('z-index', 981);
+            });
+        }
     }
 
     var defaults = {
