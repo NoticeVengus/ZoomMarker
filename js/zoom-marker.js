@@ -15,6 +15,7 @@
 (function($) {
 
     var GLOBAL = [];     // 全局变量集合
+    var gIndex = 0;
 
     $.fn.extend({
         "zoomMarker": function (_options) {
@@ -200,7 +201,8 @@
      */
     var initGlobalData = function(id) {
         if(typeof (GLOBAL[id]) === 'undefined') {
-            GLOBAL.push({
+            const param = {
+                index: gIndex+=2,
                 id: id,
                 options: {
                     imgNaturalSize: {
@@ -213,7 +215,11 @@
                 isInit: false,
                 markerList: [],    // 数组，存放marker的DOM对象
                 markerId: 0        // marker的唯一ID，只能增加
-            });
+            }
+            GLOBAL.push(param);
+            return param;
+        } else {
+            return GLOBAL[id];
         }
     }
 
@@ -282,6 +288,7 @@
         var that = params.that;
         that.trigger("zoom_marker_img_load", src);
         that.attr("src", src);
+        that.css("z-index", params.index);
         getImageSize(document.getElementsByName(that.attr('name'))[0], function (size) {
             if(typeof(noResize)==='undefined' || !noResize){
                 // 调整图片宽高
@@ -341,6 +348,8 @@
         var markerId = params.markerId;
         var markerList = params.markerList;
         var _marker = $("<div class='zoom-marker'><img draggable='false'><span></span></div>");
+        _marker.css('z-index', params.index + 1);
+        console.log(params.index);
         var __marker = _marker.find("img");
         var size = marker.size||options.marker_size;
         marker.size = size;

@@ -32,7 +32,7 @@ body{
 }
 
 .zoom-marker-hover-dialog{
-    z-index: 10;
+    z-index: 999;
     background-color: lightgray;
     display: none;
     position: absolute;
