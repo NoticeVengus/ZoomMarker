@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2018.11.6
- * @version     0.0.10
+ * @date        2019.2.7
+ * @version     0.0.11
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -16,6 +16,7 @@
 
     var GLOBAL = [];     // 全局变量集合
     var gIndex = 0;
+    const MAX_IMG_Z_INDEX = 980;    // 图像最大z-index
 
     $.fn.extend({
         "zoomMarker": function (_options) {
@@ -93,6 +94,12 @@
                 var params = getGlobalParam(ID);
                 var options = params.options;
                 var that = params.that;
+                // 只有图像在顶部的时候，才响应点击事件
+                if(!isLayoutOnTop(ID)) {
+                    moveImageTop(ID);
+                    return;
+                }
+                // 发送消息
                 if(typeof(e.pointers[0].x)==='undefined'){
                     var offset = that.offset();
                     that.trigger("zoom_marker_mouse_click", {
@@ -492,6 +499,7 @@
         GLOBAL.forEach(function(param, index) {
             if(param.id !== id) {
                 param.that.css('z-index', param.index);
+                // 标记集合的z-index配置为当前图像层级+1
                 param.markerList.forEach(function(element, index) {
                     element.marker.css('z-index', param.index + 1);
                 });
@@ -501,11 +509,28 @@
         if(typeof(params) !== 'undefined') {
             const markerList = params.markerList;
             const img = params.that;
-            img.css('z-index', 980);
+            img.css('z-index', MAX_IMG_Z_INDEX);
             markerList.forEach(function(element, index) {
-                element.marker.css('z-index', 981);
+                element.marker.css('z-index', MAX_IMG_Z_INDEX + 1);
             });
         }
+    }
+
+    /**
+     * 如果当前配置的图层在顶部，返回true，否则返回false
+     * @param id
+     * @return {boolean}
+     */
+    var isLayoutOnTop = function(id) {
+        const params = getGlobalParam(id);
+        var maxIndex = -1;
+        GLOBAL.forEach(function(param, index) {
+            if(param.that.css('z-index') > maxIndex) {
+                maxIndex = param.that.css('z-index');
+            }
+        });
+        // 如果当前点击的图层层级和最大层级相同，表明当前点击的图层已在最上层
+        return params.that.css('z-index') === maxIndex;
     }
 
     var defaults = {

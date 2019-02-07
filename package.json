@@ -1,6 +1,6 @@
 {
   "name": "zoom_marker",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
