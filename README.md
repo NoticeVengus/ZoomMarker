@@ -11,6 +11,7 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.1.0    | 2019.2.13 | 添加Canvas绘图层接口，优化多图层环境体验  | 
 | 0.0.11   | 2019.2.7  | 多图层环境下，点击非当前图层时将拦截图层切换的发送消息  | 
 | 0.0.10   | 2018.11.6 | 解决多图像下图片和标记点的迭代顺序问题  | 
 | 0.0.9    | 2018.11.5 | 解决缩放图片后图片大小不一致问题  | 
@@ -90,6 +91,7 @@
 | marker_size | 默认标记点尺寸 | 20|
 | enable_drag | 允许拖拽 | true |
 | auto_index_z | 自动配置层级 | true |
+| enable_canvas | 添加Canvas绘图层 | false |
 
 ### rate
 缺省值0.2  
@@ -132,6 +134,9 @@
 ### auto_index_z
 自动管理图像和标记点的层级信息，在点击和拖拽的时候自动将当前图像和标记点置顶
 
+### enable_canvas
+添加Canvas绘图层，因为可能影响性能，默认关闭
+
 ## Methods方法  
 ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQuery对象上使用jQuery插件的方法调用即可，如清空所有标记点：  
 
@@ -148,6 +153,8 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 | zoomMarker_GetPicSize()         | 获取记载图片尺寸    | 
 | zoomMarker_EnableDrag(enable)   | 是否允许图像拖拽    | 
 | zoomMarker_TopIndexZ()          | 图像和标记点置顶    |
+| zoomMarker_Canvas()             | 获取canvas绘图层上下文  |
+| zoomMarker_CanvasClean()        | 清空canvas画布    |
         
 ### zoomMarker_LoadImage(src)
 用于加载图像，src传入图片URL或本地路径。
@@ -230,6 +237,14 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 
 ### zoomMarker_TopIndexZ()
 图像和对应的标记点有层级关系，通过这个方法将当前图像和标记点层级置顶。
+
+### zoomMarker_Canvas()
+需要在初始化图像时配置enable_canvas参数为true。  
+获取Canvas的上下文context，通过Canvas绘图方法在图像上绘制图形。  
+需要注意的是，绘图坐标都是以图像的分辨率为基准。
+
+### zoomMarker_CanvasClean()
+清空Canvas的绘图数据。
 
 ## Event事件  
 通过"on"或"bind"监听ZoomMarker发送的事件。

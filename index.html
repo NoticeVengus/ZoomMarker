@@ -57,6 +57,7 @@
 
     $('#zoom-marker-btn-clean').click(function(e){
         $('#zoom-marker-img').zoomMarker_CleanMarker();
+        $('#zoom-marker-img').zoomMarker_CanvasClean();
     });
 
     // this array stores the styles for EASY-LOADING
@@ -118,6 +119,14 @@
                 },
                 hint:{value:tagNumber, style:{color:"#ffffff", left:"10px"}}
             });
+            // 画线
+            const context = item.zoomMarker_Canvas();
+            if(context !== null) {
+                context.strokeStyle = 'red';
+                context.moveTo(position.x, position.y);
+                context.lineTo(100,100);
+                context.stroke();
+            }
             if(++tagNumber>=10)
                 tagNumber=1;
         });
@@ -153,24 +162,25 @@
 
     /******************** INIT ZoomMarker here *****************************/
     $(document).ready(function () {
-        $('#zoom-marker-img').zoomMarker({
-            src: "img/mountain.jpg",
+        $('#zoom-marker-img-alt').zoomMarker({
+            src: "img/rail.jpg",
             rate: 0.2,
             width: 600,
             max: 3000,
             markers:[
-                {src:"img/marker.svg", x:500, y:500}
+                {src:"img/marker.svg", x:300, y:300}
             ]
         });
 
-        $('#zoom-marker-img-alt').zoomMarker({
-            src: "img/rail.jpg",
+        $('#zoom-marker-img').zoomMarker({
+            src: "img/mountain.jpg",
             rate: 0.2,
             width: 400,
             max: 3000,
             markers:[
                 {src:"img/marker.svg", x:200, y:200}
-            ]
+            ],
+            enable_canvas: true
         });
     })
     /******************** INIT ZoomMarker here *****************************/

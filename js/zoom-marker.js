@@ -1,13 +1,13 @@
 /*!
  * @author      YeYe
- * @date        2019.2.7
- * @version     0.0.11
+ * @date        2019.2.13
+ * @version     0.1.0
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
  * Hammer.js(hammerjs.github.io)
  *
- * Happy National Day Holiday :-)
+ * Happy Spring Festival :-)
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
  * 支持同时显示多张图片
  */
@@ -17,6 +17,7 @@
     var GLOBAL = [];     // 全局变量集合
     var gIndex = 0;
     const MAX_IMG_Z_INDEX = 980;    // 图像最大z-index
+    const CANVAS_SUFFIX = "_canvas";    // canvas层后缀
 
     $.fn.extend({
         "zoomMarker": function (_options) {
@@ -45,6 +46,7 @@
             // 配置图片资源
             if(options.src===null) {
                 console.log('Image resources is not defined.');
+                return;
             }
             else {
                 loadImage(ID, options.src);
@@ -167,6 +169,7 @@
                 top: (center.y-that.height()*(center.y-offset.top)/h0),
                 left: (center.x-that.width()*(center.x-offset.left)/w0)})
             reloadMarkers(ID);
+            resizeCanvas(ID);
         },
         // 图片拖动
         // x>0向右移动，y>0向下移动
@@ -178,6 +181,7 @@
             if(options.enable_drag) {
                 $(this).offset({top:y, left:x});
                 reloadMarkers(ID);
+                resizeCanvas(ID);
             }
         },
         // 添加标记点
@@ -211,7 +215,18 @@
         // 置顶图像迭代顺序
         "zoomMarker_TopIndexZ" : function() {
             moveImageTop($(this).attr('id'));
-        }
+        },
+        // 获取canvas绘图层上下文
+        "zoomMarker_Canvas": function() {
+            const ID = $(this).attr('id');
+            const params = getGlobalParam(ID);
+            return params.canvas.context;
+        },
+        // 清空画布
+        "zoomMarker_CanvasClean": function() {
+            const ID = $(this).attr('id');
+            addCanvas(ID);
+        },
     });
 
     /**
@@ -233,7 +248,11 @@
                 dialog: null,
                 isInit: false,
                 markerList: [],    // 数组，存放marker的DOM对象
-                markerId: 0        // marker的唯一ID，只能增加
+                markerId: 0,       // marker的唯一ID，只能增加
+                canvas: {
+                    item: null,
+                    context: null
+                }       // canvas绘图层
             }
             GLOBAL.push(param);
             return param;
@@ -263,13 +282,17 @@
      */
     var getImageSize = function(img, fn){
         img.onload = null;
-        if(img.complete){
+        // IE兼容问题
+        /*if(img.complete){
             fn(_getImageSize(img));
         }
         else{
             img.onload = function(){
                 fn(_getImageSize(img));
             }
+        }*/
+        img.onload = function(){
+            fn(_getImageSize(img));
         }
     };
 
@@ -324,7 +347,14 @@
             }
             options.imgNaturalSize = size;
             params.options.imgNaturalSize = size;
+            // 图片尺寸加载成功后，配置标记点
             loadMarkers(id, options.markers);
+            // 图层置顶
+            moveImageTop(id);
+            // 是否添加canvas叠加层
+            if(options.enable_canvas) {
+                addCanvas(id);
+            }
         });
     }
 
@@ -499,20 +529,33 @@
         GLOBAL.forEach(function(param, index) {
             if(param.id !== id) {
                 param.that.css('z-index', param.index);
+                param.that.addClass('zoom-marker-opacity');
                 // 标记集合的z-index配置为当前图像层级+1
                 param.markerList.forEach(function(element, index) {
                     element.marker.css('z-index', param.index + 1);
+                    element.marker.addClass('zoom-marker-opacity');
                 });
+                // canvas层顺序
+                if(param.canvas.item !== null) {
+                    param.canvas.item.css('z-index', param.index + 1);
+                    param.canvas.item.addClass('zoom-marker-opacity');
+                }
             }
         });
         // 配置当前图层z-index
         if(typeof(params) !== 'undefined') {
             const markerList = params.markerList;
             const img = params.that;
+            img.removeClass('zoom-marker-opacity');
             img.css('z-index', MAX_IMG_Z_INDEX);
             markerList.forEach(function(element, index) {
                 element.marker.css('z-index', MAX_IMG_Z_INDEX + 1);
+                element.marker.removeClass('zoom-marker-opacity');
             });
+            if(params.canvas.item !== null) {
+                params.canvas.item.css('z-index', MAX_IMG_Z_INDEX + 1);
+                params.canvas.item.removeClass('zoom-marker-opacity');
+            }
         }
     }
 
@@ -533,6 +576,50 @@
         return params.that.css('z-index') === maxIndex;
     }
 
+    /**
+     * 添加canvas绘图层
+     * @param id        需要绘图的图像id
+     */
+    const addCanvas = function(id) {
+        const pItem = $('#' + id + CANVAS_SUFFIX);
+        if(pItem !== null) {
+            pItem.remove();
+        }
+        const params = getGlobalParam(id);
+        const options = params.options;
+        const size = options.imgNaturalSize;
+        const that = params.that;
+        const item = $("<canvas id='" + id + CANVAS_SUFFIX + "' width='" + size.width + "' height='" +
+            size.height + "'  style='z-index: " + (params.index + 1) + "; position: absolute; left: 100px; top: 0px; pointer-events:none'>" +
+            "Current browser is not support canvas tag</canvas>");
+        that.parent().append(item);
+        const context=document.getElementById(id + CANVAS_SUFFIX).getContext("2d");
+        params.canvas.item = item;
+        params.canvas.context = context;
+        resizeCanvas(id);
+    }
+
+    /**
+     * 重绘canvas层，通过图片ID绑定
+     * @param id        需要重绘canvas的图像ID
+     */
+    const resizeCanvas = function(id) {
+        const params = getGlobalParam(id);
+        const item = params.canvas.item;
+        if(item === null) {
+            return;
+        }
+        const that = params.that;
+        const offset = that.offset();
+        // 调整位置
+        item.offset({
+            top: that.offset().top,
+            left: that.offset().left
+        });
+        item.height(that.height());
+        item.width(that.width());
+    }
+
     var defaults = {
         rate: 0.2,              // 鼠标滚动的缩放速率
         src: null,              // 图片资源
@@ -542,7 +629,8 @@
         markers: [],            // marker数组，[{src:"marker.png", x:100, y:100, size:20, click:fn()}]
         marker_size: 20,        // 默认marker尺寸
         enable_drag: true,      // 是否允许拖动，默认允许
-        auto_index_z: true      // 自动配置图像迭代顺序
+        auto_index_z: true,     // 自动配置图像迭代顺序
+        enable_canvas: false    // 是否启用canvas绘图层，会影响性能
     }
 
 })(window.jQuery);

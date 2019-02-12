@@ -44,3 +44,8 @@ body{
     border-width: 2px;
     border-radius: 10px;
 }
+
+.zoom-marker-opacity{
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
