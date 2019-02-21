@@ -11,6 +11,8 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.1.2    | 2019.2.21 | 添加标记点可拖动选项  | 
+| 0.1.1    | 2019.2.21 | 添加缩放锁定参数  | 
 | 0.1.0    | 2019.2.13 | 添加Canvas绘图层接口，优化多图层环境体验  | 
 | 0.0.11   | 2019.2.7  | 多图层环境下，点击非当前图层时将拦截图层切换的发送消息  | 
 | 0.0.10   | 2018.11.6 | 解决多图像下图片和标记点的迭代顺序问题  | 
@@ -31,13 +33,14 @@
 | [jQuery](http://jquery.com/)   | 3.3.1  | JavaScript的DOM操作框架 | 
 | [jquery.mousewheel](http://plugins.jquery.com/mousewheel/)   | 1.6  | jQuery鼠标滚轮监听插件 | 
 | [Hammer.js](http://hammerjs.github.io/)| 2.0.4| 多点触控插件    | 
-| [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| 加载动画库    | 
+| [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| (可选) 加载动画库    | 
 
 在本例子中，还使用了自行编写的开源加载动画插件[EasyLoading](https://github.com/yeye0922/EasyLoading/)，该插件同样需要jQuery支持。  
 如果您对[EasyLoading](https://github.com/yeye0922/EasyLoading/)感兴趣，欢迎加星。
 
 
 ## Usages用法  
+### 1. 快速使用
 引入ZoomMarker的JavaScript和CSS文件  
 
     <link rel="stylesheet" href="css/zoom-marker.css">
@@ -77,6 +80,38 @@
 现在你可以看到效果了，单击鼠标拖动图片，鼠标滚轮滚动放大缩小图片，添加的标记也会跟着移动。
 
 ![Image text](https://github.com/yeye0922/ZoomMarker/raw/master/screenshot/sc_2.png)  
+
+### 2. 使用Canvas画布绘图
+Canvas画布功能在图片div标签上覆盖一层Canvas绘图层，可通过该图层绘制图形。  
+为了使用Canvas画布功能，需要在初始化ZoomMarker对象时手动配置***enable_canvas***为***true***。
+
+    $('#zoom-marker-img').zoomMarker({
+        src: "img/mountain.jpg",
+        rate: 0.2,
+        width: 400,
+        max: 3000,
+        markers:[
+            {src:"img/marker.svg", x:200, y:200}
+        ],
+        enable_canvas: true
+    });
+        
+Canvas图层的大小和图片的实际像素大小相同。  
+如下例子在鼠标点击图像时，手动绘制一条从[100, 100]坐标出发，至点击坐标点结束的红线。
+
+    item.on("zoom_marker_mouse_click", function(event, position){
+        // 画线
+        const context = item.zoomMarker_Canvas();
+        if(context !== null) {
+            context.strokeStyle = 'red';
+            context.moveTo(position.x, position.y);
+            context.lineTo(100,100);
+            context.stroke();
+        }
+    });
+
+
+
 ## Parameters参数  
 初始化时可传入以下可选参数。  
 
@@ -92,6 +127,7 @@
 | enable_drag | 允许拖拽 | true |
 | auto_index_z | 自动配置层级 | true |
 | enable_canvas | 添加Canvas绘图层 | false |
+| zoom_lock | 缩放锁定 | false |
 
 ### rate
 缺省值0.2  
@@ -136,6 +172,10 @@
 
 ### enable_canvas
 添加Canvas绘图层，因为可能影响性能，默认关闭
+
+### zoom_lock
+缩放锁定，开启则以图片中点作为缩放中点，默认关闭  
+关闭状态下以鼠标或双指缩放中心作为图片放大或缩小的中点
 
 ## Methods方法  
 ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQuery对象上使用jQuery插件的方法调用即可，如清空所有标记点：  
@@ -192,6 +232,7 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 | dialog   | 悬浮对话框    | _null_    | N     |
 | hint     | 标记点内部内容| _null_    | N     |
 | click    | 标记点击回调  | _null_    | N     |
+| draggable  | 标记点可拖动开关  | _null_    | Y     |
 
 ###### (1) dialog
 
