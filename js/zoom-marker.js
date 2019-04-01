@@ -1,20 +1,20 @@
 /*!
  * @author      YeYe
- * @date        2019.2.21
- * @version     0.1.2
+ * @date        2019.4.1
+ * @version     0.1.4
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
  * Hammer.js(hammerjs.github.io)
  *
- * Happy Spring Festival :-)
+ * Happy April Fools' Day :-)
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
  * 支持同时显示多张图片
  */
 
 (function($) {
 
-    var GLOBAL = [];     // 全局变量集合
+    const GLOBAL = [];     // 全局变量集合
     var gIndex = 0;
     const MAX_IMG_Z_INDEX = 980;    // 图像最大z-index
     const CANVAS_SUFFIX = "_canvas";    // canvas层后缀
@@ -23,7 +23,7 @@
         "zoomMarker": function (_options) {
             const ID = $(this).attr('id');
             initGlobalData(ID);
-            var params = getGlobalParam(ID);
+            const params = getGlobalParam(ID);
             var options = params.options;
             var that = params.that;
             var dialog = params.dialog;
@@ -33,7 +33,7 @@
                 return;
             isInit = true;
             params.isInit = isInit;
-            document.ondragstart=function() {return false;}
+            document.ondragstart=function() {return false;};
             that = $(this);
             params.that = that;
             var offset;
@@ -45,7 +45,7 @@
             params.options = options;
             // 配置图片资源
             if(options.src===null) {
-                console.log('Image resources is not defined.');
+                console.error('Image resources is not defined.');
                 return;
             }
             else {
@@ -57,8 +57,9 @@
                 return false;
             });
             // 图片拖动监听器
-            var picHamer = new Hammer(document.getElementById($(this).attr('id')));
-            picHamer.on("pan", function (e) {
+            const picHammer = new Hammer(document.getElementById($(this).attr('id')));
+            picHammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+            picHammer.on("panleft panright panup pandown", function (e) {
                 if(!(options.pinchlock||false)){
                     dialog.hide();
                     that.zoomMarker_Move(e.deltaX+offset.left, e.deltaY+offset.top);
@@ -68,21 +69,21 @@
                     }
                 }
             });
-            picHamer.on("panstart", function (e) {
+            picHammer.on("panstart", function () {
                 offset = that.offset();
             });
-            picHamer.on("panend", function (e) {
+            picHammer.on("panend", function () {
                 // 解除pinch事件，使能pan
                 options.pinchlock = false;
             });
             // 触屏移动事件
-            picHamer.get('pinch').set({enable: true});
-            picHamer.on("pinchmove", function (e) {
+            picHammer.get('pinch').set({enable: true});
+            picHammer.on("pinchmove", function (e) {
                 dialog.hide();
                 that.zoomMarker_Zoom({x:e.center.x, y:e.center.y}, e.scale/options.pinchscale);
                 options.pinchscale = e.scale;
             });
-            picHamer.on("pinchstart", function (e) {
+            picHammer.on("pinchstart", function () {
                 // 为了防止缩放手势结束后，两个手指抬起的速度不一致导致误判为pan事件，这里锁定pinch并在pan释放后解除
                 options.pinchlock = true;
                 options.pinchscale = 1.0;
@@ -92,18 +93,18 @@
             params.dialog = dialog;
             that.parent().append(dialog);
             // 添加图像点击监听器，发送消息
-            new Hammer(document.getElementById(that.attr('id'))).on('tap', function (e) {
-                var params = getGlobalParam(ID);
-                var options = params.options;
-                var that = params.that;
+            picHammer.on('tap', function (e) {
+                const params = getGlobalParam(ID);
+                const options = params.options;
+                const that = params.that;
                 // 只有图像在顶部的时候，才响应点击事件
                 if(!isLayoutOnTop(ID)) {
                     moveImageTop(ID);
                     return;
                 }
                 // 发送消息
-                if(typeof(e.pointers[0].x)==='undefined'){
-                    var offset = that.offset();
+                if(typeof(e.pointers[0].x) === 'undefined'){
+                    const offset = that.offset();
                     that.trigger("zoom_marker_mouse_click", {
                         x: (e.center.x-offset.left) / that.width() * options.imgNaturalSize.width,
                         y: (e.center.y-offset.top) / that.height() * options.imgNaturalSize.height
@@ -135,16 +136,16 @@
          */
         "zoomMarker_Zoom": function(center, scale){
             const ID = $(this).attr('id');
-            var params = getGlobalParam(ID);
-            var options = params.options;
-            var that = params.that;
+            const params = getGlobalParam(ID);
+            const options = params.options;
+            const that = params.that;
 
             //var that = $(this);
             //var options = document.options;
-            var offset = that.offset();
+            const offset = that.offset();
             const hwRatio = options.imgNaturalSize.height / options.imgNaturalSize.width;
-            var h0 = that.height();
-            var w0 = that.width();
+            const h0 = that.height();
+            const w0 = that.width();
             var tarWidth = w0 * scale;
             var tarHeight = tarWidth * hwRatio;
             // 最大宽度限制
@@ -159,7 +160,6 @@
             }
             that.height(parseInt(tarHeight));
             that.width(parseInt(tarWidth));
-            console.log(that.height() + ":" + that.width());
             if(typeof(center)==='undefined' || center===null){
                 center = {};
                 center.x = offset.left+w0/2;
@@ -167,7 +167,7 @@
             }
             that.offset({
                 top: (center.y-that.height()*(center.y-offset.top)/h0),
-                left: (center.x-that.width()*(center.x-offset.left)/w0)})
+                left: (center.x-that.width()*(center.x-offset.left)/w0)});
             reloadMarkers(ID);
             resizeCanvas(ID);
         },
@@ -175,11 +175,35 @@
         // x>0向右移动，y>0向下移动
         "zoomMarker_Move": function(x, y){
             const ID = $(this).attr('id');
-            var params = getGlobalParam(ID);
-            var options = params.options;
+            const params = getGlobalParam(ID);
+            const options = params.options;
             // 是否允许拖动
             if(options.enable_drag) {
-                $(this).offset({top:y, left:x});
+                // 是否锁边
+                if(options.move_limit) {
+                    // 获取父容器和图像尺寸
+                    const img = $(this);
+                    const superOffset = img.parent().offset();
+                    const maxX = img.parent().width() + superOffset.left;
+                    const maxY = img.parent().height() + superOffset.top;
+                    const width = img.width();
+                    const height = img.height();
+                    var offsetX = x;
+                    var offsetY = y;
+                    if((offsetX + width) > maxX) {
+                        offsetX = maxX - width;
+                    } else if(offsetX < superOffset.left) {
+                        offsetX = superOffset.left;
+                    }
+                    if((offsetY + height) > maxY) {
+                        offsetY = maxY - height;
+                    } else if(offsetY < superOffset.top) {
+                        offsetY = superOffset.top;
+                    }
+                    $(this).offset({top:offsetY, left:offsetX});
+                } else {
+                    $(this).offset({top:y, left:x});
+                }
                 reloadMarkers(ID);
                 resizeCanvas(ID);
             }
@@ -200,8 +224,8 @@
         // 获取图像真实尺寸
         "zoomMarker_GetPicSize": function(){
             const ID = $(this).attr('id');
-            var params = getGlobalParam(ID);
-            var options = params.options;
+            const params = getGlobalParam(ID);
+            const options = params.options;
             return options.imgNaturalSize;
         },
         // 图像居中显示
@@ -230,7 +254,7 @@
         // 移动标记点marker
         "zoomMarker_MoveMarker": function(markerId, x, y) {
             const ID = $(this).attr('id');
-            var params = getGlobalParam(ID);
+            const params = getGlobalParam(ID);
             $(params.markerList).each(function(index, marker){
                 if(marker.id === markerId) {
                     setMarkerOffset(ID, marker.marker, {x: x, y: y, size: marker.param.size}, params.that.offset());
@@ -244,7 +268,7 @@
      * 初始化全局变量
      * @param id        当前item的ID，作为标识的唯一KEY
      */
-    var initGlobalData = function(id) {
+    const initGlobalData = function(id) {
         if(typeof (GLOBAL[id]) === 'undefined') {
             const param = {
                 index: gIndex+=2,
@@ -264,34 +288,34 @@
                     item: null,
                     context: null
                 }       // canvas绘图层
-            }
+            };
             GLOBAL.push(param);
             return param;
         } else {
             return GLOBAL[id];
         }
-    }
+    };
 
     /**
      * 获取全局变量属性值
      * @param id            item对应ID
      * @returns {*}
      */
-    var getGlobalParam = function(id) {
+    const getGlobalParam = function(id) {
         for(var i = 0; i < GLOBAL.length; ++i) {
             if(GLOBAL[i].id === id) {
                 return GLOBAL[i];
             }
         }
         return null;
-    }
+    };
 
     /**
      * 异步获取图片大小，需要等待图片加载完后才能判断图片实际大小
      * @param img
      * @param fn        {width:rw, height:rh}
      */
-    var getImageSize = function(img, fn){
+    const getImageSize = function(img, fn){
         img.onload = null;
         // IE兼容问题
         /*if(img.complete){
@@ -313,21 +337,22 @@
      * @returns {{width: (Number|number), height: (Number|number)}}
      * @private
      */
-    var _getImageSize = function(img){
+    const _getImageSize = function(img){
+        var rw, rh;
         if (typeof img.naturalWidth === "undefined") {
             // IE 6/7/8
-            var i = new Image();
+            const i = new Image();
             i.src = img.src;
-            var rw = i.width;
-            var rh = i.height;
+            rw = i.width;
+            rh = i.height;
         }
         else {
             // HTML5 browsers
-            var rw = img.naturalWidth;
-            var rh = img.naturalHeight;
+            rw = img.naturalWidth;
+            rh = img.naturalHeight;
         }
-        return ({width:rw, height:rh});
-    }
+        return ({width: rw, height: rh});
+    };
 
     /**
      * 加载图片
@@ -335,18 +360,18 @@
      * @param src       加载图片资源路径
      * @param noResize  是否调整图片的位置
      */
-    var loadImage = function(id, src, noResize){
-        var params = getGlobalParam(id);
-        var options = params.options;
-        var that = params.that;
+    const loadImage = function(id, src, noResize){
+        const params = getGlobalParam(id);
+        const options = params.options;
+        const that = params.that;
         that.trigger("zoom_marker_img_load", src);
         that.attr("src", src);
         that.css("z-index", params.index);
         getImageSize(document.getElementsByName(that.attr('name'))[0], function (size) {
             if(typeof(noResize)==='undefined' || !noResize){
                 // 调整图片宽高
-                var originWidth = that.width();
-                var originHeight = that.height();
+                const originWidth = that.width();
+                const originHeight = that.height();
                 if (options.width != null) {
                     that.width(options.width);
                     that.height(that.width() / originWidth * originHeight);
@@ -367,77 +392,79 @@
                 addCanvas(id);
             }
         });
-    }
+    };
 
     /**
      * 图像居中
      * @param id    item对应的id
      */
-    var imageCenterAlign = function(id){
-        var params = getGlobalParam(id);
-        var that = params.that;
+    const imageCenterAlign = function(id){
+        const params = getGlobalParam(id);
+        const that = params.that;
         // 图像居中
-        var offset = that.offset();
-        var pDiv = that.parent();
-        var top = offset.top + (pDiv.height() - that.height()) / 2;
-        var left = offset.left + (pDiv.width() - that.width()) / 2;
+        const offset = that.offset();
+        const pDiv = that.parent();
+        const top = offset.top + (pDiv.height() - that.height()) / 2;
+        const left = offset.left + (pDiv.width() - that.width()) / 2;
         that.offset({top: top > 0 ? top : 0, left: left > 0 ? left : 0});
-    }
+    };
 
     /**
      * 加载marker
      * @param id        item对应的id
      * @param markers   需要添加的marker数组
      */
-    var loadMarkers = function(id, markers){
+    const loadMarkers = function(id, markers){
         $(markers).each(function(index, marker){
             addMarker(id, marker);
         });
-    }
+    };
 
     /**
      * 添加marker
      * @param id    item对应的id
      * @param marker
      */
-    var addMarker = function(id, marker) {
-        var params = getGlobalParam(id);
-        var options = params.options;
-        var dialog = params.dialog;
-        var that = params.that;
-        var markerId = params.markerId;
-        var markerList = params.markerList;
-        var _marker = $("<div id='" + id + markerId + "' class='zoom-marker'><img draggable='false'><span></span></div>");
+    const addMarker = function(id, marker) {
+        const params = getGlobalParam(id);
+        const options = params.options;
+        const dialog = params.dialog;
+        const that = params.that;
+        const markerId = params.markerId;
+        const markerList = params.markerList;
+        const _marker = $("<div id='" + id + markerId + "' class='zoom-marker'><img draggable='false'><span></span></div>");
         _marker.css('z-index', params.index + 1);
-        var __marker = _marker.find("img");
-        var size = marker.size||options.marker_size;
+        const __marker = _marker.find("img");
+        const size = marker.size||options.marker_size;
         const draggable = typeof(marker.draggable) === 'undefined' ? true : marker.draggable;
         var offset = null;
         marker.size = size;
         __marker.attr('src', marker.src);
         // 标记点内容文本
         if(typeof(marker.hint)!='undefined'){
-            var span = _marker.find("span");
+            const span = _marker.find("span");
             span.empty().append(marker.hint.value||"");
             span.css(marker.hint.style||{});
         }
         __marker.height(size);
         __marker.width(size);
-        var markerObj = {id:markerId, marker:_marker, param:marker};
+        const markerObj = {id:markerId, marker:_marker, param:marker};
         params.markerId++;
-        // 标记点点击监听器
-        _marker.click(function(){
-            // hammer拖动结束后会也会触发这个点击事件，所以在这里配置offset=null
-            if(offset === null) {
-                if(typeof(marker.click)!="undefined"){
-                    marker.click(markerObj);
+        // 标记点点击监听器，延时一段时间再添加，避免移动端重复触发点击事件
+        setTimeout(function() {
+            _marker.click(function() {
+                // hammer拖动结束后会也会触发这个点击事件，所以在这里配置offset=null
+                if(offset === null) {
+                    if(typeof(marker.click)!="undefined"){
+                        marker.click(markerObj);
+                    }
+                    that.trigger("zoom_marker_click", markerObj);
                 }
-                that.trigger("zoom_marker_click", markerObj);
-            }
-            offset = null;
-        });
+                offset = null;
+            });
+        }, 100);
         // 悬浮监听器
-        if(typeof(marker.dialog)!='undefined'){
+        if(typeof(marker.dialog) !== 'undefined'){
             _marker.mousemove(function(e){
                 if(offset === null) {
                     options.hover_marker_id = markerObj.id;
@@ -447,19 +474,19 @@
                     });
                 }
             });
-            _marker.mouseout(function(e){
+            _marker.mouseout(function(){
                 options.hover_marker_id = null;
                 dialog.hide();
             });
-        };
+        }
         that.parent().append(_marker);
         markerList.push(markerObj);
         params.markerList = markerList;
         setMarkerOffset(id, _marker, marker, that.offset());
         // 添加拖动监听器
         if(draggable) {
-            var picHamer = new Hammer(document.getElementById(_marker.attr('id')));
-            picHamer.on("pan", function (e) {
+            const picHammer = new Hammer(document.getElementById(_marker.attr('id')));
+            picHammer.on("pan", function (e) {
                 // 最大及最小宽度限制
                 const minX = that.offset().left - marker.size / 2;
                 const maxX = minX + that.width();
@@ -479,10 +506,10 @@
                 }
                 _marker.offset({left: x, top: y});
             });
-            picHamer.on("panstart", function (e) {
+            picHammer.on("panstart", function () {
                 offset = _marker.offset();
             });
-            picHamer.on("panend", function (e) {
+            picHammer.on("panend", function () {
                 // 在_marker.click(function()配置offset=null
                 //offset = null;
                 // 更新marker记录的实际坐标
@@ -494,16 +521,16 @@
         }
 
         return markerObj;
-    }
+    };
 
     /**
      * 在拖动或缩放后重新加载图标
      * @param id    item对应的id
      */
-    var reloadMarkers = function(id){
-        var params = getGlobalParam(id);
-        var that = params.that;
-        var offset = that.offset();
+    const reloadMarkers = function(id){
+        const params = getGlobalParam(id);
+        const that = params.that;
+        const offset = that.offset();
         $(params.markerList).each(function(index, element){
             setMarkerOffset(id, element.marker, element.param, offset);
         });
@@ -513,9 +540,9 @@
      * 清空标记
      * @param id    item对应的id
      */
-    var cleanMarkers = function(id){
-        var params = getGlobalParam(id);
-        var markerList = params.markerList;
+    const cleanMarkers = function(id){
+        const params = getGlobalParam(id);
+        const markerList = params.markerList;
         $(markerList).each(function(index, element){
             element.marker.unbind();
             element.marker.remove();
@@ -530,23 +557,22 @@
      * @param id        item对应的id
      * @param markerId  标记点的唯一ID
      */
-    var removeMarker = function(id, markerId){
-        var params = getGlobalParam(id);
-        var markerId = params.markerId;
-        var options = params.options;
-        var dialog = params.dialog;
+    const removeMarker = function(id, markerId){
+        const params = getGlobalParam(id);
+        const options = params.options;
+        const dialog = params.dialog;
         $(params.markerList).each(function(index, element){
-            if(element.id===markerId) {
+            if(element.id === markerId) {
                 element.marker.unbind();
                 element.marker.remove();
                 // 如果当前悬浮窗在该marker上显示，需要隐藏该悬浮窗
-                if(((options.hover_marker_id||null)!=null) && options.hover_marker_id===markerId){
+                if(((options.hover_marker_id || null) !== null) && options.hover_marker_id === markerId){
                     dialog.hide();
                 }
                 return false;
             }
         });
-    }
+    };
 
     /**
      * 配置marker的offset
@@ -555,31 +581,31 @@
      * @param position      marker的位置信息，包含{x: , y: }
      * @param offset        图片的offset信息
      */
-    var setMarkerOffset = function(id, marker, position, offset){
-        var params = getGlobalParam(id);
+    const setMarkerOffset = function(id, marker, position, offset){
+        const params = getGlobalParam(id);
         const that = params.that;
         const options = params.options;
         marker.offset({
             left: that.width() * position.x / options.imgNaturalSize.width + offset.left - position.size/2,
             top: that.height() * position.y / options.imgNaturalSize.height + offset.top - position.size
         });
-    }
+    };
 
     /**
      * 是否允许图像拖动
      * @param id            item对应的id
      * @param enable        是否允许拖动，布尔型
      */
-    var enableDrag = function(id, enable) {
-        var params = getGlobalParam(id);
+    const enableDrag = function(id, enable) {
+        const params = getGlobalParam(id);
         params.options.enable_drag = enable;
-    }
+    };
 
     /**
      * 移动图像和对应标记到顶层
      * @param id            图像id
      */
-    var moveImageTop = function(id) {
+    const moveImageTop = function(id) {
         const params = getGlobalParam(id);
         // 除了当前图层之外，其他图层都要恢复原来的z-index属性
         GLOBAL.forEach(function(param, index) {
@@ -613,14 +639,14 @@
                 params.canvas.item.removeClass('zoom-marker-opacity');
             }
         }
-    }
+    };
 
     /**
      * 如果当前配置的图层在顶部，返回true，否则返回false
      * @param id
      * @return {boolean}
      */
-    var isLayoutOnTop = function(id) {
+    const isLayoutOnTop = function(id) {
         const params = getGlobalParam(id);
         var maxIndex = -1;
         GLOBAL.forEach(function(param, index) {
@@ -630,7 +656,7 @@
         });
         // 如果当前点击的图层层级和最大层级相同，表明当前点击的图层已在最上层
         return params.that.css('z-index') === maxIndex;
-    }
+    };
 
     /**
      * 添加canvas绘图层
@@ -653,7 +679,7 @@
         params.canvas.item = item;
         params.canvas.context = context;
         resizeCanvas(id);
-    }
+    };
 
     /**
      * 重绘canvas层，通过图片ID绑定
@@ -674,7 +700,7 @@
         });
         item.height(that.height());
         item.width(that.width());
-    }
+    };
 
     var defaults = {
         rate: 0.2,              // 鼠标滚动的缩放速率
@@ -687,7 +713,9 @@
         enable_drag: true,      // 是否允许拖动，默认允许
         auto_index_z: true,     // 自动配置图像迭代顺序
         enable_canvas: false,   // 是否启用canvas绘图层，会影响性能
-        zoom_lock: false        // 缩放锁定，开启则以图片中点作为缩放中点
+        zoom_lock: false,       // 缩放锁定，开启则以图片中点作为缩放中点
+        move_limit: false       // 拖动锁边，开启则只允许图片在父容器内部拖动
     }
 
 })(window.jQuery);
+

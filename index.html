@@ -36,7 +36,7 @@
 <script src="js/jquery.mousewheel.min.js"></script>
 <script src="js/hammer.min.js"></script>
 
-<script src="js/zoom-marker.js"></script>
+<script src="js/zoom-marker.min.js"></script>
 <script src="js/easy-loading.js"></script>
 
 <script>
@@ -105,20 +105,22 @@
         // handle "TAP" event and add marker to image
         item.on("zoom_marker_mouse_click", function(event, position){
             console.log("Mouse click on: "+JSON.stringify(position));
-            item.zoomMarker_AddMarker({
+            const marker = item.zoomMarker_AddMarker({
                 src:"img/marker.svg",
                 x:position.x,
                 y:position.y,
                 size:30,
-                dialog:{
-                    value: "<h4>content for dialog_"+tagNumber+"</h4>",
-                    offsetX: 20,
-                    style: {
-                        "border-color": "#86df5f"
-                    }
-                },
+                dialog:{},
                 hint:{value:tagNumber, style:{color:"#ffffff", left:"10px"}}
             });
+            // 手动配置dialog
+            marker.param.dialog = {
+                value: "<h4>content for dialog_"+tagNumber+"</h4>",
+                offsetX: 20,
+                style: {
+                    "border-color": "#86df5f"
+                }
+            };
             // 画线
             const context = item.zoomMarker_Canvas();
             if(context !== null) {
@@ -180,7 +182,8 @@
             markers:[
                 {src:"img/marker.svg", x:200, y:200, draggable:false}
             ],
-            enable_canvas: true
+            enable_canvas: true,
+            move_limit: true
         });
     })
     /******************** INIT ZoomMarker here *****************************/
