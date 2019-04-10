@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2019.4.1
- * @version     0.1.4
+ * @date        2019.4.9
+ * @version     0.1.5
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -228,10 +228,6 @@
             const options = params.options;
             return options.imgNaturalSize;
         },
-        // 图像居中显示
-        "zoomMarker_ImageCenterAlign" : function(){
-            imageCenterAlign($(this).attr('id'));
-        },
         // 设置是否允许拖动
         "zoomMarker_EnableDrag" : function(enable) {
             enableDrag($(this).attr('id'), enable);
@@ -261,6 +257,16 @@
                     return false;
                 }
             });
+        },
+        // 恢复图像加载后的初始尺寸
+        "zoomMarker_ResetImage": function() {
+            const ID = $(this).attr('id');
+            const params = getGlobalParam(ID);
+            const initSize = params.initSize;
+            console.log(params.options.markers);
+            params.that.width(initSize.width).height(initSize.height).offset({top: initSize.top, left: initSize.left});
+            reloadMarkers(ID);
+            resizeCanvas(ID);
         }
     });
 
@@ -277,8 +283,14 @@
                     imgNaturalSize: {
                         width: 0,
                         height: 0
-                    }
+                    }  // 图像真实尺寸
                 },
+                initSize: {
+                    width: 0,
+                    height: 0,
+                    top: 0,
+                    left: 0
+                },   // 初始尺寸和位置
                 that: null,
                 dialog: null,
                 isInit: false,
@@ -319,13 +331,13 @@
         img.onload = null;
         // IE兼容问题
         /*if(img.complete){
-            fn(_getImageSize(img));
-        }
-        else{
-            img.onload = function(){
-                fn(_getImageSize(img));
-            }
-        }*/
+         fn(_getImageSize(img));
+         }
+         else{
+         img.onload = function(){
+         fn(_getImageSize(img));
+         }
+         }*/
         img.onload = function(){
             fn(_getImageSize(img));
         }
@@ -383,6 +395,11 @@
             }
             options.imgNaturalSize = size;
             params.options.imgNaturalSize = size;
+            // 配置初始尺寸
+            params.initSize.width = that.width();
+            params.initSize.height = that.height();
+            params.initSize.left = that.offset().left;
+            params.initSize.top = that.offset().top;
             // 图片尺寸加载成功后，配置标记点
             loadMarkers(id, options.markers);
             // 图层置顶

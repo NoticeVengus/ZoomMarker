@@ -23,6 +23,7 @@
     <button id="zoom-marker-btn-clean">clean marker</button>
     <button id="zoom-marker-btn-loading">show loader</button>
     <button id="zoom-marker-btn-enable-drag">disable drag</button>
+    <button id="zoom-marker-btn-reset">reset</button>
 </div>
 
 <div id="zoom-marker-div" class="zoom-marker-div">
@@ -98,6 +99,10 @@
         } else {
             $('#zoom-marker-btn-enable-drag').text('enable drag');
         }
+    });
+
+    $('#zoom-marker-btn-reset').click(function(e) {
+        $('#zoom-marker-img').zoomMarker_ResetImage();
     });
 
     // init item
