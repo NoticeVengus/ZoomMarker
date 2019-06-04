@@ -165,9 +165,13 @@
                 center.x = offset.left+w0/2;
                 center.y = offset.top+h0/2;
             }
-            that.offset({
-                top: (center.y-that.height()*(center.y-offset.top)/h0),
-                left: (center.x-that.width()*(center.x-offset.left)/w0)});
+            var y = center.y-that.height()*(center.y-offset.top)/h0;
+            var x = center.x-that.width()*(center.x-offset.left)/w0;
+            if(options.move_limit) {
+                limitLockOffset(that, x, y);
+            } else {
+                that.offset({top: y, left: x});
+            }
             reloadMarkers(ID);
             resizeCanvas(ID);
         },
@@ -181,26 +185,7 @@
             if(options.enable_drag) {
                 // 是否锁边
                 if(options.move_limit) {
-                    // 获取父容器和图像尺寸
-                    const img = $(this);
-                    const superOffset = img.parent().offset();
-                    const maxX = img.parent().width() + superOffset.left;
-                    const maxY = img.parent().height() + superOffset.top;
-                    const width = img.width();
-                    const height = img.height();
-                    var offsetX = x;
-                    var offsetY = y;
-                    if((offsetX + width) > maxX) {
-                        offsetX = maxX - width;
-                    } else if(offsetX < superOffset.left) {
-                        offsetX = superOffset.left;
-                    }
-                    if((offsetY + height) > maxY) {
-                        offsetY = maxY - height;
-                    } else if(offsetY < superOffset.top) {
-                        offsetY = superOffset.top;
-                    }
-                    $(this).offset({top:offsetY, left:offsetX});
+                    limitLockOffset($(this), x, y);
                 } else {
                     $(this).offset({top:y, left:x});
                 }
@@ -717,6 +702,31 @@
         });
         item.height(that.height());
         item.width(that.width());
+    };
+
+    const limitLockOffset = function(img, x, y, resize) {
+        // 获取父容器和图像尺寸
+        const superOffset = img.parent().offset();
+        const maxX = img.parent().width() + superOffset.left;
+        const maxY = img.parent().height() + superOffset.top;
+        const width = img.width();
+        const height = img.height();
+        var offsetX = x;
+        var offsetY = y;
+        if((offsetX + width) > maxX) {
+            offsetX = maxX - width;
+            if(typeof(resize) !== 'undefined' && resize) {
+                
+            }
+        } else if(offsetX < superOffset.left) {
+            offsetX = superOffset.left;
+        }
+        if((offsetY + height) > maxY) {
+            offsetY = maxY - height;
+        } else if(offsetY < superOffset.top) {
+            offsetY = superOffset.top;
+        }
+        img.offset({top:offsetY, left:offsetX});
     };
 
     var defaults = {
