@@ -158,18 +158,36 @@
                 tarWidth = options.min;
                 tarHeight = tarWidth * hwRatio;
             }
-            that.height(parseInt(tarHeight));
-            that.width(parseInt(tarWidth));
+
+            tarWidth = parseInt(tarWidth);
+            tarHeight = parseInt(tarHeight);
+
             if(typeof(center)==='undefined' || center===null){
                 center = {};
                 center.x = offset.left+w0/2;
                 center.y = offset.top+h0/2;
             }
-            var y = center.y-that.height()*(center.y-offset.top)/h0;
-            var x = center.x-that.width()*(center.x-offset.left)/w0;
+            var y = center.y-tarHeight*(center.y-offset.top)/h0;
+            var x = center.x-tarWidth*(center.x-offset.left)/w0;
+
+            var isOverlap = false;
             if(options.move_limit) {
-                limitLockOffset(that, x, y);
-            } else {
+                var param = limitLockZoom($(this), tarWidth, tarHeight, x, y, center);
+                if(param.isTerminate) {
+                    return;
+                }
+                isOverlap = param.isOverlap;
+                if(isOverlap) {
+                    // 越界操作
+                    that.height(param.height);
+                    that.width(param.width);
+                    that.offset({top: param.offset.top, left: param.offset.left});
+                }
+            }
+            // 缩放后没有越界
+            if(!isOverlap) {
+                that.height(tarHeight);
+                that.width(tarWidth);
                 that.offset({top: y, left: x});
             }
             reloadMarkers(ID);
@@ -704,7 +722,89 @@
         item.width(that.width());
     };
 
-    const limitLockOffset = function(img, x, y, resize) {
+    /**
+     * 图像预缩放
+     * @param img
+     * @param targetWidth       缩放后图像宽度
+     * @param targetHeight      缩放后图像高度
+     * @param targetLeft        缩放后图像左offset
+     * @param targetTop         缩放后图像上offset
+     * @return {{offset: {top: number, left: number, bottom: *, right: *}, isTerminate: boolean, isOverlap: boolean, width: number, height: number}}
+     */
+    const limitLockZoom = function(img, targetWidth, targetHeight, targetLeft, targetTop, center) {
+        // 获取父容器和图像尺寸
+        const superOffset = img.parent().offset();
+        const maxX = img.parent().width() + superOffset.left;
+        const maxY = img.parent().height() + superOffset.top;
+        const minX = superOffset.left;
+        const minY = superOffset.top;
+        const width = parseInt(img.width());
+        const height = parseInt(img.height());
+        const parentWidth = parseInt(img.parent().width());
+        const parentHeight = parseInt(img.parent().height());
+        var result = {
+            'isTerminate': false,   // 是否终止缩放
+            'isOverlap': false,     // 是否越界
+            'height': 0,            // 图像宽度...
+            'width': 0,
+            'offset': {
+                'left': targetLeft,
+                'top': targetTop,
+                'right': targetLeft + targetWidth,
+                'bottom': targetTop + targetHeight
+            }
+        };
+        // 如果是放大操作，只要有一边长度越界就返回，不需要放大
+        if((targetWidth > width) && (width >= parentWidth || height >= parentHeight)) {
+            result.isTerminate = true;
+            return result;
+        }
+        // 缩放后左边界越界
+        if(result.offset.left < minX) {
+            result.isOverlap = true;
+            result.offset.left = minX;
+        }
+        // 缩放后右边界越界
+        if(result.offset.right > maxX) {
+            result.isOverlap = true;
+            result.offset.right = maxX;
+        }
+        // 缩放后上边界越界
+        if(result.offset.top < minY) {
+            result.isOverlap = true;
+            result.offset.top = minY;
+        }
+        // 缩放后下边界越界
+        if(result.offset.bottom > maxY) {
+            result.isOverlap = true;
+            result.offset.bottom = maxY;
+        }
+        // 处理
+        if(result.isOverlap) {
+            result.width = result.offset.right - result.offset.left;
+            result.height = result.offset.bottom - result.offset.top;
+            if(result.width >= parentWidth) {
+                result.height = height * result.width / width;
+                result.offset.top = center.y - (center.y - img.offset().top) / height * targetHeight;
+                if(result.offset.top < minY) {
+                    result.offset.top = minY;
+                } else if(result.offset.bottom > maxY) {
+                    result.offset.top = maxY - targetHeight;
+                }
+            } else if(result.height >= parentHeight) {
+                result.width = width * result.height / height;
+                result.offset.left = center.x - (center.x - img.offset().left) / width * targetWidth;
+                if(result.offset.left < minX) {
+                    result.offset.left = minX;
+                } else if(result.offset.right > maxX) {
+                    result.offset.left = maxX - targetWidth;
+                }
+            }
+        }
+        return result;
+    };
+
+    const limitLockOffset = function(img, x, y) {
         // 获取父容器和图像尺寸
         const superOffset = img.parent().offset();
         const maxX = img.parent().width() + superOffset.left;
@@ -715,9 +815,6 @@
         var offsetY = y;
         if((offsetX + width) > maxX) {
             offsetX = maxX - width;
-            if(typeof(resize) !== 'undefined' && resize) {
-                
-            }
         } else if(offsetX < superOffset.left) {
             offsetX = superOffset.left;
         }

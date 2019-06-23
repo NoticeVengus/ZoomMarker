@@ -10,6 +10,16 @@ body{
     position: relative;
     background-color: white;
 }
+
+.zoom-marker-div-half{
+    width:90%;
+    margin:auto auto auto auto;
+    height:400px;
+    overflow:hidden;
+    position: relative;
+    background-color: white;
+}
+
 .zoom-marker-img{
     position:absolute;
     left: 0;

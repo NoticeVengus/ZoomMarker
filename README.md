@@ -5,12 +5,14 @@
 如有任何功能问题或改进意见，欢迎反馈，感谢。
 
 ## Preview效果预览
-[点击这里](https://yeye0922.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/yeye0922/EasyLoading/)和[EasyLoading](https://github.com/yeye0922/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。
+[点击这里](https://yeye0922.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/yeye0922/EasyLoading/)和[EasyLoading](https://github.com/yeye0922/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。  
+[点击这里](https://yeye0922.github.io/ZoomMarker/index_half.html)查看自带的分区域显示离例子。  
 
 ## Version版本
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.1.6    | 2019.6.23  | 修正图像锁边缩放逻辑 |
 | 0.1.5    | 2019.4.9  | 添加图像位置和大小重置接口 |
 | 0.1.4    | 2019.4.1  | 添加图像拖动锁边功能 |
 | 0.1.3    | 2019.4.1  | 修复移动端ChromeV8内核图片拖动及marker点击触发问题|
