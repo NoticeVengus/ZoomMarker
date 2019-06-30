@@ -1,6 +1,6 @@
 # ZoomMarker
-国际化，主分支说明文档调整为English，中文分支请移步[这里](https://yeye0922.github.io/ZoomMarker/)  
-Internationalization, the main branch description document is adjusted to English, Chinese branch please click [here](https://yeye0922.github.io/ZoomMarker/)  
+国际化，主分支说明文档调整为English，中文分支请移步[这里](https://github.com/yeye0922/ZoomMarker/tree/language_ZH)  
+Internationalization, the main branch description document is adjusted to English, Chinese branch please click [here](https://github.com/yeye0922/ZoomMarker/tree/language_ZH)  
   
 A jQuery plugin for image zoom in and out, customize tags and canvas are also supported.  
 You can zoom and drag image by using this plugin. What you have to do is just import this plugin to your project.  
