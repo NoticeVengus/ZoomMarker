@@ -1,77 +1,82 @@
 # ZoomMarker
-一款用于图片滚动放大拖动，且可以添加标记的jQuery插件  
+国际化，主分支说明文档调整为English，中文分支请移步[这里](https://yeye0922.github.io/ZoomMarker/)  
+Internationalization, the main branch description document is adjusted to English, Chinese branch please click [here](https://yeye0922.github.io/ZoomMarker/)  
   
-在项目中需要实现类似地图应用那样的，具有鼠标滚动缩放和拖动功能的插件效果，且可以添加具有回调功能的标记点。在网上找了一圈都没有找到合适的，所以图方便自己写了一个。  
-如有任何功能问题或改进意见，欢迎反馈，感谢。
+A jQuery plugin for image zoom in and out, customize tags and canvas are also supported.  
+You can zoom and drag image by using this plugin. What you have to do is just import this plugin to your project.  
+Feedback is welcome for any suggestions.  
 
-## Preview效果预览
-[点击这里](https://yeye0922.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/yeye0922/EasyLoading/)和[EasyLoading](https://github.com/yeye0922/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。  
-[点击这里](https://yeye0922.github.io/ZoomMarker/index_half.html)查看带的分区域显示的例子。  
+## Preview
+[Click Here](https://yeye0922.github.io/ZoomMarker/) for an example with basic usages.  
+[Click Here](https://yeye0922.github.io/ZoomMarker/index_half.html) for an example with different region views. They can show images without disturbing each other.
 
 ![Image text](https://github.com/yeye0922/ScreenSample/raw/master/ZoomMarker/gif_1.gif)
 ![Image text](https://github.com/yeye0922/ScreenSample/raw/master/ZoomMarker/gif_2.gif)
 
-## Version版本
+## Version
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
-| 0.1.6    | 2019.6.23  | 修正图像锁边缩放逻辑 |
-| 0.1.5    | 2019.4.9  | 添加图像位置和大小重置接口 |
-| 0.1.4    | 2019.4.1  | 添加图像拖动锁边功能 |
-| 0.1.3    | 2019.4.1  | 修复移动端ChromeV8内核图片拖动及marker点击触发问题|
-| 0.1.2    | 2019.2.21 | 添加标记点可拖动选项  |
-| 0.1.1    | 2019.2.21 | 添加缩放锁定参数  |
-| 0.1.0    | 2019.2.13 | 添加Canvas绘图层接口，优化多图层环境体验  |
-| 0.0.11   | 2019.2.7  | 多图层环境下，点击非当前图层时将拦截图层切换的发送消息  |
-| 0.0.10   | 2018.11.6 | 解决多图像下图片和标记点的迭代顺序问题  |
-| 0.0.9    | 2018.11.5 | 解决缩放图片后图片大小不一致问题  |
-| 0.0.8    | 2018.9.25 | 支持同时显示多个图片控件  |
-| 0.0.7    | 2018.9.25 | 添加允许和禁止图像拖动接口      |
-| 0.0.6    | 2018.7.24 | 解决jQuery的context废弃undefined问题      |
-| 0.0.5    | 2017.11.13 | 添加图像居中接口，修复重复初始化问题      |
-| 0.0.4    | 2017.11.11 | 修正图片显示比例错误的问题      |
-| 0.0.3    | 2017.11.8 | 优化接口API      |
-| 0.0.2    | 2017.11.3 | 引入Hammer.js处理鼠标操作      |
-| 0.0.1    | 2017.10.25 | 初始版本，基础功能      |
+| 0.1.6    | 2019.6.23 | fix image zoom lock |
+| 0.1.5    | 2019.4.9  | reset function for position and size |
+| 0.1.4    | 2019.4.1  | lock function for image dragging |
+| 0.1.3    | 2019.4.1  | fix problems performing on mobile ChromeV8 engine|
+| 0.1.2    | 2019.2.21 | tag draggable switch function |
+| 0.1.1    | 2019.2.21 | zoom lock  |
+| 0.1.0    | 2019.2.13 | CANVAS is supported  |
+| 0.0.11   | 2019.2.7  | message block on multi-layer situation |
+| 0.0.10   | 2018.11.6 | fix the order problem of images and tags on multi-layer situation  |
+| 0.0.9    | 2018.11.5 | fix the problem of size changing after image zoom operations |
+| 0.0.8    | 2018.9.25 | support multi-image  |
+| 0.0.7    | 2018.9.25 | append draggable switch function  |
+| 0.0.6    | 2018.7.24 | fix the problem of deprecated context interface in jQuery   |
+| 0.0.5    | 2017.11.13 | append center align function, fix the initialization problem   |
+| 0.0.4    | 2017.11.11 | fix the ratio problem  |
+| 0.0.3    | 2017.11.8 | API optimization  |
+| 0.0.2    | 2017.11.3 | import Hammer.js to handle mouse operations |
+| 0.0.1    | 2017.10.25 | first version   |
 
-## Require依赖
+## Require
 
 | name  | min-version | detail    |
 | :-------:|:----:|:-------------:|
-| [jQuery](http://jquery.com/)   | 3.3.1  | JavaScript的DOM操作框架 |
-| [jquery.mousewheel](http://plugins.jquery.com/mousewheel/)   | 1.6  | jQuery鼠标滚轮监听插件 |
-| [Hammer.js](http://hammerjs.github.io/)| 2.0.4| 多点触控插件    |
-| [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| (可选) 加载动画库    |
+| [jQuery](http://jquery.com/)   | 3.3.1  | DOM framework with JavaScript |
+| [jquery.mousewheel](http://plugins.jquery.com/mousewheel/)   | 1.6  | jQuery plugin for mouse wheel |
+| [Hammer.js](http://hammerjs.github.io/)| 2.0.4| multi touch plugin    |
+| [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| (optional) loading animation plugin   |
 
-在本例子中，还使用了自行编写的开源加载动画插件[EasyLoading](https://github.com/yeye0922/EasyLoading/)，该插件同样需要jQuery支持。
-如果您对[EasyLoading](https://github.com/yeye0922/EasyLoading/)感兴趣，欢迎加星。
+I use an other plugin written by myself in the above sample: [EasyLoading](https://github.com/yeye0922/EasyLoading/)  
+This plugin should also using jQuery.  
+If you are interesting with [EasyLoading](https://github.com/yeye0922/EasyLoading/), please add a little star.
 
 
-## Usages用法
-### 1. 快速使用
-引入ZoomMarker的JavaScript和CSS文件
+## Usages
+### 1. Quick start
+Import JavaScript and CSS files of ZoomMarker.  
 
     <link rel="stylesheet" href="css/zoom-marker.css">
     <script src="js/zoom-marker.js"></script>
 
-引入第三方依赖库
+Import 3rd libraries.  
 
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/jquery.mousewheel.min.js"></script>
     <script src="js/hammer.min.js"></script>
 
-在示例中，使用了图像加载动画，为此您还需要引入[EasyLoading](https://github.com/yeye0922/EasyLoading/)插件，它也可以单独使用。如果您的项目中不需要使用加载动画，则不需要
-引入该插件。
+The example above has used loading animation, so I also import an other plugin named [EasyLoading](https://github.com/yeye0922/EasyLoading/). 
+It can be used independently so importing is unnecessary if you do not need loading at all.  
+Import this loading animation plugin:  
 
     <link rel="stylesheet" href="css/easy-loading.css">
     <script src="js/easy-loading.js"></script>
 
-添加必要的html标签，***注意img标签必须包含唯一的id属性***
+Add the necessary html tags, ***ATTENTION!! img tag SHOULD has a unique id attribute for its own***  
 
     <div id="zoom-marker-div" class="zoom-marker-div">
         <img class="zoom-marker-img" id="zoom-marker-img" alt="..." name="viewArea"  draggable="false"/>
     </div>
-在ready()中调用初始化方法
+    
+Triggering initialization function in ready()  
 
     $(document).ready(function () {
         $('#zoom-marker-img').zoomMarker({
@@ -84,14 +89,16 @@
                 ]
         });
     })
-在上述例子中，你还需要在img/目录下添加一个名为moutain.jpg的文件用于显示图片，在img/目录下添加名为marker.svg的文件作为marker文件资源，我们已经在该工程对应目录下添加这两个文件。
-现在你可以看到效果了，单击鼠标拖动图片，鼠标滚轮滚动放大缩小图片，添加的标记也会跟着移动。
+    
+As we can see, moutain.jpg is a sample image file that shown in this example, and marker.svg should be also placed in img/ folder as marker resource, 
+these two files has already placed in their position.  
+Now you can see what ZoomMarker looks like. Just drag and zoom the image, click to add some tags above image.  
 
 ![Image text](https://github.com/yeye0922/ZoomMarker/raw/master/screenshot/sc_2.png)
 
-### 2. 使用Canvas画布绘图
-Canvas画布功能在图片div标签上覆盖一层Canvas绘图层，可通过该图层绘制图形。
-为了使用Canvas画布功能，需要在初始化ZoomMarker对象时手动配置***enable_canvas***为***true***。
+### 2. Drawing with Canvas
+I have placed a transparent layer above an image with same size to support canvas drawing.  
+To using Canvas drawing function, you should set up ***enable_canvas*** parameter to ***true*** in initialization method.  
 
     $('#zoom-marker-img').zoomMarker({
         src: "img/mountain.jpg",
@@ -104,11 +111,11 @@ Canvas画布功能在图片div标签上覆盖一层Canvas绘图层，可通过�
         enable_canvas: true
     });
 
-Canvas图层的大小和图片的实际像素大小相同。
-如下例子在鼠标点击图像时，手动绘制一条从[100, 100]坐标出发，至点击坐标点结束的红线。
+The Canvas layer is same size to the ***real*** pixel size of image.  
+In the example below, I wrote a line start from [100, 100] to the position of mouse clicking.  
 
     item.on("zoom_marker_mouse_click", function(event, position){
-        // 画线
+        // draw a line
         const context = item.zoomMarker_Canvas();
         if(context !== null) {
             context.strokeStyle = 'red';
@@ -118,226 +125,226 @@ Canvas图层的大小和图片的实际像素大小相同。
         }
     });
 
-
-
-## Parameters参数
-初始化时可传入以下可选参数。
+## Parameters
+The parameters below are supported in initialization method.  
 
 | param    | function      | default |
 | :-------:|:-------------:|:------:|
-| rate     | 缩放速率 | 0.2|
-| src      | 图片资源 | _null_|
-| width    | 图片加载宽度 | 500|
-| min      | 图片最小宽度| 300|
-| max      | 图片最大宽度 | _null_|
-| markers  |标记点参数数组 | []|
-| marker_size | 默认标记点尺寸 | 20|
-| enable_drag | 允许拖拽 | true |
-| auto_index_z | 自动配置层级 | true |
-| enable_canvas | 添加Canvas绘图层 | false |
-| zoom_lock | 缩放锁定 | false |
-| move_limit | 拖动锁边 | false |
+| rate     | zoom speed ratio | 0.2|
+| src      | image resource| _null_|
+| width    | loading width of image | 500|
+| min      | minimum width of image| 300|
+| max      | maximum width of image | _null_|
+| markers  | parameter arrays for markers | []|
+| marker_size | default pixel size of marker | 20|
+| enable_drag | draggable or not | true |
+| auto_index_z | config layer order automatically | true |
+| enable_canvas | enable Canvas layer | false |
+| zoom_lock | image can not be zoomed with center align | false |
+| move_limit | image can not be dragged out of the region of its parent | false |
 
 ### rate
-缺省值0.2
-该浮点型参数决定了图片滚动放大时的速率，值越大图片缩放速度越快，范围{0, 1}。
+Value 0.2 default.  
+The floating point parameter determines the rate at which the image is scrolled and enlarged. The larger the value, the faster the image is zoomed, the range {0, 1}.  
+
 ### src
-缺省值null，不加载图片
-图片加载的路径
+null for default, will not load image.  
+Defining the path of image for loading.  
 
 ### width
-用于配置图片加载后的宽度，请不要使用100%之类的相对宽度定位，会影响ZoomMarker的工作。
-如果你要使图片的宽度与父节点宽度相同，可以使用jQuery的方法获取父节点宽度，或直接获取"zoom-marker-div"标签的宽度，如：
+Used to configure the width of the image after loading, please do not use relative width positioning such as 100%, which will affect ZoomMarker works.  
+If you want to make the image as width as its with parent, using jQuery method to get the width of its parent, or directly get the width of the "zoom-marker-div" tag, such as:  
 
     $("#zoom-marker-img").parent().width();
     $("#zoom-marker-div").width();
 
 ### min
-限定图片缩放的最小宽度，默认最小宽度为300px。
+Limit the minimum width of the image zoom, the default minimum width is 300px.  
 
 ### max
-限定图片缩放的最大宽度，默认不做限制。
+Limit the maximum width of the image zoom, no restrictions by default.  
 
 ### markers
-记录了标记点的参数，包含以下几个参数。
+Recorded the parameters of the marked point, including the following parameters:  
 
     {
-        src: "img/marker.png",   // (required)图片加载路径
-        x: 500,                  // (required)标记点在图片中的X坐标
-        y: 500,                  // (required)标记点在图片中的Y坐标
+        src: "img/marker.png",   // (required) path for image loaded
+        x: 500,                  // (required) X axis of marker
+        y: 500,                  // (required) Y axis of marker
         click: function(object){
-            // 点击回调方法，object为marker的jQuery对象
+            // feed back function after click event happened, object is the jQuery instance of marker
         }
     }
 
 ### marker_size
-标记点尺寸只能为正方形，通过这个参数可以配置标记点的大小，你也可以在"zoomMarker_AddMarker"添加标记点方法中通过参数配置单个标记点的大小。
+The point size can only be square. You can configure the size of the point by this parameter.  
+You can also configure the size of a single point by parameter in the "zoomMarker_AddMarker" add point method.  
 
 ### enable_drag
-是否允许当前图像拖拽
+Draggable function is enabled for this image or not.  
 
 ### auto_index_z
-自动管理图像和标记点的层级信息，在点击和拖拽的时候自动将当前图像和标记点置顶
+Automatic management of image and point level information, automatically pin the current image and marker points when clicking and dragging.  
 
 ### enable_canvas
-添加Canvas绘图层，因为可能影响性能，默认关闭
+Add Canvas drawing layer, as it may affect performance so turned off by default.  
 
 ### zoom_lock
-缩放锁定，开启则以图片中点作为缩放中点，默认关闭
-关闭状态下以鼠标或双指缩放中心作为图片放大或缩小的中点
+Zoom lock, turn on the point in the picture as the zoom midpoint, off by default.  
+In the off state, use the mouse or two-finger zoom center to zoom in or out as the midpoint of the picture.  
 
 ### move_limit
-拖动锁边，开启则只允许图片在父容器内部拖动
+Drag the seam and open it to only drag the image inside the parent container.  
 
-## Methods方法
-ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQuery对象上使用jQuery插件的方法调用即可，如清空所有标记点：
+## Methods
+ZoomMarker's methods all start with "zoomMarker_" and can be called directly on your image tag jQuery object using the jQuery plugin method, such as clearing all the mark points:  
 
         $("#viewArea").zoomMarker_CleanMarker();
 
 | name                            | function      |
 | :------------------------------:|:-------------:|
-| zoomMarker_LoadImage(src)       | 加载图像      |
-| zoomMarker_Zoom(center, scale)  | 缩放图片      |
-| zoomMarker_Move(x, y)           | 移动图片      |
-| zoomMarker_AddMarker(marker)    | 添加标记点    |
-| zoomMarker_RemoveMarker(markerId) | 删除标记点  |
-| zoomMarker_CleanMarker()        | 清空标记点    |
-| zoomMarker_GetPicSize()         | 获取记载图片尺寸    |
-| zoomMarker_EnableDrag(enable)   | 是否允许图像拖拽    |
-| zoomMarker_TopIndexZ()          | 图像和标记点置顶    |
-| zoomMarker_Canvas()             | 获取canvas绘图层上下文  |
-| zoomMarker_CanvasClean()        | 清空canvas画布    |
-| zoomMarker_ResetImage()         | 重置图像位置及大小 |
+| zoomMarker_LoadImage(src)       | load image      |
+| zoomMarker_Zoom(center, scale)  | zoom image      |
+| zoomMarker_Move(x, y)           | change the position of image   |
+| zoomMarker_AddMarker(marker)    | add a customized mark   |
+| zoomMarker_RemoveMarker(markerId) | delete mark |
+| zoomMarker_CleanMarker()        | clean up marks    |
+| zoomMarker_GetPicSize()         | get the real size of image  |
+| zoomMarker_EnableDrag(enable)   | enable draggable or not  |
+| zoomMarker_TopIndexZ()          | move image and tags to the top layer   |
+| zoomMarker_Canvas()             | get the context of Canvas layer  |
+| zoomMarker_CanvasClean()        | clean up Canvas layer  |
+| zoomMarker_ResetImage()         | reset the position and size of image |
 
 ### zoomMarker_LoadImage(src)
-用于加载图像，src传入图片URL或本地路径。
+For image loading, src is the URL or local path of image file.  
 
 | param    | function      |
 | :-------:|:-------------:|
-| src      | 图像资源路径或URL |
+| src      | URL or local path of image resource |
 
 ### zoomMarker_Zoom(center, scale)
-缩放图片。
+Zoom the image.
 
 | param    | function      |
 | :-------:|:-------------:|
-| center   | 缩放中心点，相对于document的绝对坐标 |
-| scale    | 缩放比例，浮点型，如1.5为缩放到原图的1.5倍大小   |
+| center   | zoom midpoint, the absolute position of document |
+| scale    | zoom ratio, float, such as 1.5 to zoom to 1.5 times the original image size  |
 
 ### zoomMarker_Move(x, y)
-移动图片位置，笛卡尔坐标系，左上角坐标为(0, 0)。
+Move the picture position, Cartesian coordinate system, the coordinates of the upper left corner are (0, 0).  
 
 | param    | function      |
 | :-------:|:-------------:|
-| x        | 图片左上角的目标纵坐标 |
-| y        | 图片左上角的目标横坐标 |
+| x        | target ordinate in the upper left corner of the image |
+| y        | target abscissa in the upper left corner of the image |
 
 ### zoomMarker_AddMarker(marker)
-添加标记点并返回添加标记点的相关参数，marker的配置参数如下表所示。
-配置中的"x"和"y"参数均为标记点在图像中的坐标位置。
+Add a marker point and return the relevant parameters of the added marker point. The configuration parameters of the marker are shown in the following table.  
+The "x" and "y" parameters in the configuration are the coordinate positions of the marker points in the image.  
 
 | param    | function      | detault | required |
 | :-------:|:-------------:|:-------:|:--------:|
-| x        | 标记点在图像中的X坐标   | _null_    | Y     |
-| y        | 标记点在图像中的Y坐标   | _null_    | Y     |
-| src      | 标记点图标资源| _null_    | Y     |
-| size     | 标记点图标尺寸| 20        | N     |
-| dialog   | 悬浮对话框    | _null_    | N     |
-| hint     | 标记点内部内容| _null_    | N     |
-| click    | 标记点击回调  | _null_    | N     |
-| draggable  | 标记点可拖动开关  | _null_    | Y     |
+| x | The X coordinate of the marker in the image | _null_ | Y |
+| y | The Y coordinate of the marker in the image | _null_ | Y |
+| src | Point Icon Resources | _null_ | Y |
+| size | Point icon size | 20 | N |
+| dialog | hover dialog | _null_ | N |
+| hint | Point inside content | _null_ | N |
+| click | Tag Click Callback | _null_ | N |
+| draggable | Point Draggable Switch | _null_ | Y |
 
 ###### (1) dialog
 
 | param    | function      | detault | required |
 | :-------:|:-------------:|:-------:|:--------:|
-| value    | 对话框内容    | ""      | N        |
-| style    | CSS样式       | {}      | N        |
-| offsetX  | 对话框X坐标偏移| 0      | N        |
-| offsetY  | 对话框Y坐标偏移| 0      | N        |
+| value | Dialog content | "" | N |
+| style | CSS style | {} | N |
+| offsetX | Dialog X coordinate offset | 0 | N |
+| offsetY | Dialog Y coordinate offset | 0 | N |
 
 ###### (2) hint
 
 | param    | function      | detault | required |
 | :-------:|:-------------:|:-------:|:--------:|
-| value    | 标记点内容    | ""      | N        |
-| style    | CSS样式       | {}      | N        |
+| value | Point Content | "" | N |
+| style | CSS style | {} | N |
 
-###### (3) return函数返回对象
+###### (3) return object parameters
 
-| param    | function      |
+| param | function |
 | :-------:|:-------------:|
-| id       | 标记点ID      |
-| marker   | 标记点的jQuery对象  |
-| param    | 用户传入的标记点配置参数|
+| id | Point ID |
+| marker | jQuery object for point |
+| param | User passed in point configuration parameters |
 
 ### zoomMarker_RemoveMarker(markerId)
-删除标记点，传入标记点ID，ID可从"zoomMarker_AddMarker(marker)"返回结构体中的"id"项获取。
+Delete the marker point, pass in the marker point ID, and the ID can be obtained from the "id" item in the structure returned by "zoomMarker_AddMarker(marker)".
 
 ### zoomMarker_CleanMarker()
-清空所有标记点。
+Clear all points.
 
 ### zoomMarker_GetPicSize()
-获取加载图片的真实尺寸，只有当图片加载结束的时候才会返回正确的图片尺寸。
+Get the actual size of the loaded image, only return the correct image size when the image is loaded.
 
-###### return函数返回对象
-| param    | function      |
+###### return function returns an object
+| param | function |
 | :-------:|:-------------:|
-| width    | 图片宽度      |
-| height   | 图片高度      |
+| width | Image Width |
+| height | image height |
 
 ### zoomMarker_EnableDrag(enable)
-设置是否允许图像拖动。
+Set whether to allow image dragging or not.  
 
 ### zoomMarker_TopIndexZ()
-图像和对应的标记点有层级关系，通过这个方法将当前图像和标记点层级置顶。
+The image has a hierarchical relationship with the corresponding marker points, and the current image and marker point levels are topped by this method.  
 
 ### zoomMarker_Canvas()
-需要在初始化图像时配置enable_canvas参数为true。
-获取Canvas的上下文context，通过Canvas绘图方法在图像上绘制图形。
-需要注意的是，绘图坐标都是以图像的分辨率为基准。
+The enable_canvas parameter needs to be set to true when the image is initialized.  
+Get the context context of the Canvas and draw the image on the image through the Canvas drawing method.  
+It should be noted that the drawing coordinates are based on the resolution of the image.
 
 ### zoomMarker_CanvasClean()
-清空Canvas的绘图数据。
+Empty the drawing data of the Canvas.  
 
 ### zoomMarker_ResetImage()
-重置图像尺寸和位置，包括marker和canvas信息。
+Reset image size and position, including marker and canvas information.  
 
-## Event事件  
-通过"on"或"bind"监听ZoomMarker发送的事件。
+## Event
+Listen for events sent by ZoomMarker via "on" or "bind".  
 
-    // 监听图片资源加载结束消息，更新UI资源。
+    // monitor image resource loading end message, update UI resource
     $('#zoom-marker-img').on("zoom_marker_img_loaded", function(event, size){
         console.log("image has been loaded with size: "+JSON.stringify(size));
-        /** 更新UI操作 **/
+        /** UI should be updated **/
         ...
     });
 
-| name    | function      | param | detail |
+| name | function | param | detail |
 | :-------:|:-------------:|:----:|:------:|
-| zoom_marker_img_load    | 图片开始加载    | src| 图片资源路径或URL |
-| zoom_marker_img_loaded  | 图片已加载完成  | size| 图片尺寸         |
-| zoom_marker_click       | 标记点点击      | markerObj| 标记点对象        |
-| zoom_marker_mouse_click | 图片点击        | mouseObj | 图片点击对象      |
+| zoom_marker_img_load | Image Loading | src| Image Resource Path or URL |
+| zoom_marker_img_loaded | Image has been loaded | size| Image Size |
+| zoom_marker_click | Point Click | markerObj| Point Object |
+| zoom_marker_mouse_click | Image Click | mouseObj | Image Click Object |
 
 ### size
-| param    | function      | 
+| param | function |
 | :-------:|:-------------:|
-| width    | 图片宽度      | 
-| height   | 图片高度      | 
+| width | Image Width |
+| height | image height |
 
 ### markerObj
-| param    | function      | 
+| param | function |
 | :-------:|:-------------:|
-| id       | 标记点ID      | 
-| marker   | 标记点的jQuery对象  | 
-| param    | 用户传入的标记点配置参数| 
+| id | Point ID |
+| marker | jQuery object for point |
+| param | User passed in point configuration parameters |
 
 ### mouseObj
-| param    | function      | 
+| param | function |
 | :-------:|:-------------:|
-| pageX    | 点击位置在document中的X坐标      | 
-| pageY    | 点击位置在document中的Y坐标      | 
-| x        | 点击位置在图像坐标中的X坐标      | 
-| y        | 点击位置在图像坐标中的Y坐标      | 
+| pageX | Click the X coordinate of the position in the document |
+| pageY | Click on the Y coordinate of the document in the document |
+| x | Click the X coordinate of the position in the image coordinates |
+| y | Click the Y coordinate of the position in the image coordinates |
 
