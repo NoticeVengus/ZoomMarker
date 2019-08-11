@@ -1,6 +1,6 @@
-#Language
-[Chinese](https://yeye0922.github.io/ZoomMarker/)
-[English](https://yeye0922.github.io/ZoomMarker/language/README_en.md)
+#Language  
+[Chinese](https://yeye0922.github.io/ZoomMarker/)  
+[English](https://yeye0922.github.io/ZoomMarker/language/README_en.md)  
 
 # ZoomMarker  
 A jQuery plugin for image zoom in and out, customize tags and canvas are also supported.  
