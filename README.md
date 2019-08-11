@@ -1,6 +1,6 @@
 #Language  
-[Chinese](https://yeye0922.github.io/ZoomMarker/)  
-[English](https://yeye0922.github.io/ZoomMarker/language/README_en.md)  
+[Chinese](https://github.com/yeye0922/ZoomMarker)  
+[English](https://github.com/yeye0922/ZoomMarker/blob/master/language/README_en.md)  
 
 # ZoomMarker
 一款用于图片滚动放大拖动，且可以添加标记的jQuery插件  
