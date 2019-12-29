@@ -1,3 +1,7 @@
+#Language  
+[Chinese](https://github.com/yeye0922/ZoomMarker)  
+[English](https://github.com/yeye0922/ZoomMarker/blob/master/language/README_en.md)  
+
 # ZoomMarker
 一款用于图片滚动放大拖动，且可以添加标记的jQuery插件  
   
@@ -7,6 +11,9 @@
 ## Preview效果预览
 [点击这里](https://NoticeVengus.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/NoticeVengus/EasyLoading/)和[EasyLoading](https://github.com/NoticeVengus/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。  
 [点击这里](https://NoticeVengus.github.io/ZoomMarker/index_half.html)查看带的分区域显示的例子。  
+
+![Image text](https://github.com/yeye0922/ScreenSample/raw/master/ZoomMarker/gif_1.gif)
+![Image text](https://github.com/yeye0922/ScreenSample/raw/master/ZoomMarker/gif_2.gif)
 
 ## Version版本
 
