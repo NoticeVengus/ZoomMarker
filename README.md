@@ -5,8 +5,8 @@
 如有任何功能问题或改进意见，欢迎反馈，感谢。
 
 ## Preview效果预览
-[点击这里](https://yeye0922.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/yeye0922/EasyLoading/)和[EasyLoading](https://github.com/yeye0922/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。  
-[点击这里](https://yeye0922.github.io/ZoomMarker/index_half.html)查看带的分区域显示的例子。  
+[点击这里](https://NoticeVengus.github.io/ZoomMarker/)查看使用[ZoomMarker](https://github.com/NoticeVengus/EasyLoading/)和[EasyLoading](https://github.com/NoticeVengus/EasyLoading/)构建的图片拖拽、缩放、标记及加载动画的示例，使用鼠标或触屏点击在图片上添加标记点，鼠标悬浮在上面查看悬浮提示窗口，使用顶部按钮实现图片切换、清空标记点和加载动画示例等。  
+[点击这里](https://NoticeVengus.github.io/ZoomMarker/index_half.html)查看带的分区域显示的例子。  
 
 ## Version版本
 
@@ -38,10 +38,10 @@
 | [jQuery](http://jquery.com/)   | 3.3.1  | JavaScript的DOM操作框架 |
 | [jquery.mousewheel](http://plugins.jquery.com/mousewheel/)   | 1.6  | jQuery鼠标滚轮监听插件 |
 | [Hammer.js](http://hammerjs.github.io/)| 2.0.4| 多点触控插件    |
-| [EasyLoading.js](https://github.com/yeye0922/EasyLoading/)| 0.1.0| (可选) 加载动画库    |
+| [EasyLoading.js](https://github.com/NoticeVengus/EasyLoading/)| 0.1.0| (可选) 加载动画库    |
 
-在本例子中，还使用了自行编写的开源加载动画插件[EasyLoading](https://github.com/yeye0922/EasyLoading/)，该插件同样需要jQuery支持。
-如果您对[EasyLoading](https://github.com/yeye0922/EasyLoading/)感兴趣，欢迎加星。
+在本例子中，还使用了自行编写的开源加载动画插件[EasyLoading](https://github.com/NoticeVengus/EasyLoading/)，该插件同样需要jQuery支持。
+如果您对[EasyLoading](https://github.com/NoticeVengus/EasyLoading/)感兴趣，欢迎加星。
 
 
 ## Usages用法
@@ -57,7 +57,7 @@
     <script src="js/jquery.mousewheel.min.js"></script>
     <script src="js/hammer.min.js"></script>
 
-在示例中，使用了图像加载动画，为此您还需要引入[EasyLoading](https://github.com/yeye0922/EasyLoading/)插件，它也可以单独使用。如果您的项目中不需要使用加载动画，则不需要
+在示例中，使用了图像加载动画，为此您还需要引入[EasyLoading](https://github.com/NoticeVengus/EasyLoading/)插件，它也可以单独使用。如果您的项目中不需要使用加载动画，则不需要
 引入该插件。
 
     <link rel="stylesheet" href="css/easy-loading.css">
@@ -84,7 +84,7 @@
 在上述例子中，你还需要在img/目录下添加一个名为moutain.jpg的文件用于显示图片，在img/目录下添加名为marker.svg的文件作为marker文件资源，我们已经在该工程对应目录下添加这两个文件。
 现在你可以看到效果了，单击鼠标拖动图片，鼠标滚轮滚动放大缩小图片，添加的标记也会跟着移动。
 
-![Image text](https://github.com/yeye0922/ZoomMarker/raw/master/screenshot/sc_2.png)
+![Image text](https://github.com/NoticeVengus/ZoomMarker/raw/master/screenshot/sc_2.png)
 
 ### 2. 使用Canvas画布绘图
 Canvas画布功能在图片div标签上覆盖一层Canvas绘图层，可通过该图层绘制图形。
