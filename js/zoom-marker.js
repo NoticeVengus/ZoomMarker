@@ -1,13 +1,13 @@
 /*!
  * @author      YeYe
- * @date        2019.4.9
- * @version     0.1.5
+ * @date        2020.1.2
+ * @version     0.1.7
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
  * Hammer.js(hammerjs.github.io)
  *
- * Happy April Fools' Day :-)
+ * Welcome to 2020 :-)
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
  * 支持同时显示多张图片
  */
@@ -270,7 +270,12 @@
             params.that.width(initSize.width).height(initSize.height).offset({top: initSize.top, left: initSize.left});
             reloadMarkers(ID);
             resizeCanvas(ID);
-        }
+        },
+        // 刷新当前图像的所有标记点
+        "zoomMarker_ReloadMarkers": function(){
+            const ID = $(this).attr('id');
+            reloadMarkers(ID);
+        },
     });
 
     /**

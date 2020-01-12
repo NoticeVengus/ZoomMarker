@@ -19,7 +19,8 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
-| 0.1.6    | 2019.6.23  | 修正图像锁边缩放逻辑 |
+| 0.1.7    | 2020.1.2  | 添加重新加载标记点接口 |
+| 0.1.6    | 2019.6.23 | 修正图像锁边缩放逻辑 |
 | 0.1.5    | 2019.4.9  | 添加图像位置和大小重置接口 |
 | 0.1.4    | 2019.4.1  | 添加图像拖动锁边功能 |
 | 0.1.3    | 2019.4.1  | 修复移动端ChromeV8内核图片拖动及marker点击触发问题|
@@ -212,6 +213,7 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 | zoomMarker_Canvas()             | 获取canvas绘图层上下文  |
 | zoomMarker_CanvasClean()        | 清空canvas画布    |
 | zoomMarker_ResetImage()         | 重置图像位置及大小 |
+| zoomMarker_ReloadMarkers()      | 刷新当前图像的所有标记点 |
 
 ### zoomMarker_LoadImage(src)
 用于加载图像，src传入图片URL或本地路径。
@@ -306,6 +308,10 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 
 ### zoomMarker_ResetImage()
 重置图像尺寸和位置，包括marker和canvas信息。
+
+### zoomMarker_ReloadMarkers()
+有网友反馈在移动端加载新图片后，标记点会发生漂移，手动拖拽图片后图标位置恢复正常。  
+个人判断是因为不同浏览器的onload图像加载回调触发时间节点不一样导致的，因此添加这个接口，供用户手动重新加载标记点。
 
 ## Event事件  
 通过"on"或"bind"监听ZoomMarker发送的事件。
