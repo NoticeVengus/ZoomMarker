@@ -162,6 +162,11 @@
                 EasyLoading.hide();
             }, 3000);
         });
+
+        // message after at the end of Maker moving action
+        item.on("zoom_marker_move_end", function(event, position){
+            console.log("Marker moving ended on :" + JSON.stringify(position));
+        })
     }
 
     initImg($('#zoom-marker-img'));

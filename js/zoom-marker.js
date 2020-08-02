@@ -1,7 +1,7 @@
 /*!
  * @author      YeYe
- * @date        2020.1.2
- * @version     0.1.7
+ * @date        2020.8.2
+ * @version     0.1.8
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
@@ -542,6 +542,11 @@
                 const minY = that.offset().top - marker.size;
                 markerObj.param.x = (_marker.offset().left - minX) * options.imgNaturalSize.width / that.width();
                 markerObj.param.y = (_marker.offset().top - minY) * options.imgNaturalSize.height / that.height();
+                that.trigger("zoom_marker_move_end", {
+                    x: markerObj.param.x,
+                    y: markerObj.param.y,
+                    markerObj: markerObj
+                });
             });
         }
 

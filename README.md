@@ -19,6 +19,7 @@
 
 | version  | date | detail        | 
 | :-------:|:----:|:-------------:|
+| 0.1.8    | 2020.8.2  | 添加标记点移动结束回调接口 |
 | 0.1.7    | 2020.1.2  | 添加重新加载标记点接口 |
 | 0.1.6    | 2019.6.23 | 修正图像锁边缩放逻辑 |
 | 0.1.5    | 2019.4.9  | 添加图像位置和大小重置接口 |
@@ -329,6 +330,7 @@ ZoomMarker的方法全都以"zoomMarker_"开头，直接在你的图片标签jQu
 | zoom_marker_img_loaded  | 图片已加载完成  | size| 图片尺寸         |
 | zoom_marker_click       | 标记点点击      | markerObj| 标记点对象        |
 | zoom_marker_mouse_click | 图片点击        | mouseObj | 图片点击对象      |
+| zoom_marker_move_end    | Marker移动结束  | {x, y, markerObj} | 位置及标记点组合对象 |
 
 ### size
 | param    | function      | 
