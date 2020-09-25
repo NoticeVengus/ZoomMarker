@@ -1,13 +1,13 @@
 /*!
  * @author      YeYe
- * @date        2020.8.2
- * @version     0.1.8
+ * @date        2020.9.25
+ * @version     0.1.9
  * @requires
  * jQuery1.6+(http://jquery.com)
  * jquery-mousewheel(https://github.com/jquery/jquery-mousewheel)
  * Hammer.js(hammerjs.github.io)
  *
- * Welcome to 2020 :-)
+ * Happy National Day Of 2020 :-P
  * 图片缩放工具类，您可以拖动缩放图片，并添加标记点
  * 支持同时显示多张图片
  */
@@ -397,12 +397,13 @@
                     that.height(that.width() / originWidth * originHeight);
                 }
             }
-            that.trigger("zoom_marker_img_loaded", size);
+            // 配置图像尺寸
+            options.imgNaturalSize = size;
+            params.options.imgNaturalSize = size;
+            // 图像居中展示
             if(typeof(noResize)==='undefined' || !noResize) {
                 imageCenterAlign(id);
             }
-            options.imgNaturalSize = size;
-            params.options.imgNaturalSize = size;
             // 配置初始尺寸
             params.initSize.width = that.width();
             params.initSize.height = that.height();
@@ -416,6 +417,8 @@
             if(options.enable_canvas) {
                 addCanvas(id);
             }
+            // 广播消息
+            that.trigger("zoom_marker_img_loaded", size);
         });
     };
 
@@ -458,7 +461,7 @@
         const markerId = params.markerId;
         const markerList = params.markerList;
         const _marker = $("<div id='" + id + markerId + "' class='zoom-marker'><img draggable='false'><span></span></div>");
-        _marker.css('z-index', params.index + 1);
+        _marker.css('z-index', that.css('z-index') + 1);
         const __marker = _marker.find("img");
         const size = marker.size||options.marker_size;
         const draggable = typeof(marker.draggable) === 'undefined' ? true : marker.draggable;

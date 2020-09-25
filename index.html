@@ -161,6 +161,19 @@
             setTimeout(function(){
                 EasyLoading.hide();
             }, 3000);
+            item.zoomMarker_AddMarker({
+                src:"img/marker.svg",
+                x:300,
+                y:300,
+                size:40,
+                dialog:{
+                    value: "i was added on 'zoom_marker_img_loaded' event",
+                    style: {
+                        color: "red"
+                    }
+                },
+                hint:{value:'M', style:{color:"#ffffff", left:"12px"}}
+            });
         });
 
         // message after at the end of Maker moving action
